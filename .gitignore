@@ -1,0 +1,10 @@
+# Nunca subir ao repositório
+.env.local
+.env
+.env*.local
+
+# Vercel
+.vercel
+
+# Node
+node_modules/
