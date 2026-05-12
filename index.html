@@ -525,49 +525,51 @@
     const veiculosList = ['v1', 'v2', v3Ativo ? 'v3' : null].filter(Boolean);
     const veiculos = veiculosList.map((v, i) => {
       const m = g(`${v}-modelo`), c = g(`${v}-cor`), s = g(`${v}-sentido`), f = g(`${v}-faixa`), d = g(`${v}-danos`);
-      return `V${i+1}: ${m||'veículo'}${c?', cor '+c:''}${s?', deslocando-se '+s:''}${f?', faixa '+f:''}${d?', danos: '+d:''}`;
+      return `V${i+1}: ${m||'veículo'}${c?', color '+c:''}${s?', moving toward '+s:''}${f?', lane: '+f:''}${d?', contact area: '+d:''}`;
     }).join('\n');
 
     const linhas = [
-      `Criar croqui técnico/pericial de sinistro veicular em visão superior total, top-down, sem perspectiva, sem realismo dramático e sem estilo cinematográfico.`,
+      `Flat overhead technical schematic diagram (bird's-eye view, 90° top-down, no perspective, no 3D, no artistic style) for traffic engineering documentation and insurance assessment purposes.`,
       ``,
-      `TÍTULO FIXO no canto superior esquerdo, alinhado à esquerda: CROQUI TÉCNICO DE SINISTRO VEICULAR.`,
+      `This is a purely technical 2D diagram similar to a traffic engineering blueprint or road safety audit sketch.`,
       ``,
-      `Imagem dividida em três quadros empilhados verticalmente:`,
-      `Fase 1 - Deslocamento inicial`,
-      `Fase 2 - Evento / colisão`,
-      `Fase 3 - Posição final`,
+      `Include a text label in the upper-left corner, left-aligned: CROQUI TÉCNICO DE SINISTRO VEICULAR`,
       ``,
-      `VIA: ${g('tipo-via')||'via asfaltada'}. Configuração: ${g('config-via')||'pista simples'}. Sentido: ${g('sentido-via')||'não especificado'}. Faixas por sentido: ${g('qtd-faixas')||'1'}.`,
+      `The diagram is divided into three vertically stacked labeled panels:`,
+      `Panel 1 label: "Fase 1 - Deslocamento inicial"`,
+      `Panel 2 label: "Fase 2 - Ponto do evento"`,
+      `Panel 3 label: "Fase 3 - Posição final"`,
       ``,
-      `VEÍCULOS:`,
+      `ROAD: ${g('tipo-via')||'paved road'}. Layout: ${g('config-via')||'single carriageway'}. Direction: ${g('sentido-via')||'unspecified'}. Lanes per direction: ${g('qtd-faixas')||'1'}.`,
+      ``,
+      `VEHICLES (top-down view only):`,
       veiculos,
       ``,
-      `DINÂMICA:`,
-      g('relato') ? `Relato: ${g('relato')}` : '',
-      g('evento-inicial') ? `Evento inicial: ${g('evento-inicial')}` : '',
-      g('lado-desvio') ? `Lado do desvio: ${g('lado-desvio')}` : '',
-      g('movimento-apos') ? `Movimento após evento: ${g('movimento-apos')}` : '',
-      g('elemento-atingido') ? `Elemento atingido: ${g('elemento-atingido')}` : '',
-      g('posicao-final') ? `Posição final: ${g('posicao-final')}` : '',
-      g('detalhe-posicao') ? `Detalhamento: ${g('detalhe-posicao')}` : '',
-      g('observacoes') ? `Observações: ${g('observacoes')}` : '',
+      `TRAFFIC FLOW SEQUENCE:`,
+      g('relato') ? `Description: ${g('relato')}` : '',
+      g('evento-inicial') ? `Initial movement: ${g('evento-inicial')}` : '',
+      g('lado-desvio') ? `Direction of deviation: ${g('lado-desvio')}` : '',
+      g('movimento-apos') ? `Subsequent movement: ${g('movimento-apos')}` : '',
+      g('elemento-atingido') ? `Fixed element in contact: ${g('elemento-atingido')}` : '',
+      g('posicao-final') ? `Final resting position: ${g('posicao-final')}` : '',
+      g('detalhe-posicao') ? `Position detail: ${g('detalhe-posicao')}` : '',
+      g('observacoes') ? `Additional notes: ${g('observacoes')}` : '',
       ``,
-      `REGRAS OBRIGATÓRIAS:`,
-      `- Todos os veículos vistos exatamente de cima (top-down puro).`,
-      `- Representar via com faixas, sentidos e acostamento conforme informado.`,
-      `- Posicionar cada veículo exatamente na faixa informada.`,
-      `- Setas vermelhas para trajetória e sentido de deslocamento.`,
-      `- Fase 1: apenas cards pequenos com código do veículo (V1, V2, V3), sem texto adicional.`,
-      `- Fases 2 e 3: sem cards, sem caixas de texto, sem callouts — apenas rótulos curtos V1/V2/V3 sobre os veículos.`,
-      `- Representar danos diretamente no setor correto do veículo, de forma discreta e esquemática.`,
-      `- Esquerda e direita sempre do ponto de vista do veículo em relação ao seu sentido de deslocamento.`,
-      `- Valetas, barrancos e acostamentos sempre fora da faixa de rolamento.`,
-      `- Sem legenda inferior, sem legenda lateral, sem textos narrativos ou explicativos.`,
-      `- Sem pessoas, sangue, fogo, fumaça, placas reais, logotipos de montadoras.`,
-      `- Não inventar elementos não descritos no relato.`,
-      `- Estilo: croqui pericial técnico limpo, útil para análise de sinistro.`,
-    ].filter(l => l !== null);
+      `DIAGRAM REQUIREMENTS:`,
+      `- All vehicles shown strictly from directly above (flat top-down 2D, like a map symbol).`,
+      `- Road with lane markings, travel directions, shoulders or margins as described.`,
+      `- Each vehicle placed exactly in its specified lane.`,
+      `- Red directional arrows showing travel path and movement sequence.`,
+      `- Panel 1 only: small identification tag beside each vehicle showing V1, V2, V3 only.`,
+      `- Panels 2 and 3: no tags, no text boxes, no callouts — only short labels V1/V2/V3 near vehicles.`,
+      `- Structural contact areas shown directly on the correct sector of each vehicle, discreetly and schematically.`,
+      `- Left and right always from the vehicle's own perspective relative to its direction of travel.`,
+      `- Ditches, embankments and shoulders always outside the travel lane.`,
+      `- No bottom legend, no side legend, no narrative text, no explanatory labels.`,
+      `- No people, no fire, no smoke, no blood, no realistic imagery, no car brand logos, no license plates.`,
+      `- Do not add any elements not described in the sequence above.`,
+      `- Style: clean flat technical schematic, useful for traffic engineering and insurance documentation.`,
+    ].filter(l => l !== null && l !== '');
 
     return linhas.join('\n').replace(/\n{3,}/g, '\n\n').trim();
   }
@@ -605,6 +607,11 @@
 
       document.getElementById('imagem-gerada').src = data.url;
       document.getElementById('btn-download').href = data.url;
+      if (data.safe_prompt) {
+        document.getElementById('prompt-texto').textContent =
+          '── Prompt original ──\n' + prompt +
+          '\n\n── Prompt reescrito pelo GPT-4o (enviado ao DALL-E) ──\n' + data.safe_prompt;
+      }
       resultado.classList.add('visible');
       resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
