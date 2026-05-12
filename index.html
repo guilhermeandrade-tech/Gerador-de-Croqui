@@ -51,12 +51,11 @@
     header h1 { font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
     header p { font-size: 0.8rem; color: var(--text-muted); margin-top: 3px; }
 
-    /* Layout de duas colunas */
     .workspace {
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1fr 420px;
+      grid-template-columns: 1fr 440px;
       gap: 20px;
       align-items: start;
     }
@@ -68,7 +67,7 @@
       top: 24px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 0;
     }
 
     .card {
@@ -90,12 +89,7 @@
       gap: 8px;
     }
 
-    .card-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+    .card-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .full { grid-column: 1 / -1; }
@@ -129,8 +123,7 @@
       padding: 6px 16px;
       font-size: 0.8rem; font-weight: 600;
       color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s;
+      cursor: pointer; transition: all 0.2s;
     }
 
     .veiculo-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -142,80 +135,155 @@
       padding: 6px 14px;
       font-size: 0.8rem;
       color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s;
+      cursor: pointer; transition: all 0.2s;
     }
-
     .add-veiculo:hover { border-color: var(--accent); color: var(--accent); }
 
     .veiculo-panel { display: none; }
     .veiculo-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-    /* Prompt ao vivo */
-    .prompt-header {
+    /* ── PAINEL DO PROMPT ── */
+    .prompt-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .prompt-toolbar {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
     }
 
-    .prompt-title {
-      font-size: 0.75rem;
+    .prompt-toolbar-title {
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
       color: var(--text-muted);
     }
 
     .badge {
-      font-size: 0.68rem;
+      font-size: 0.67rem;
       font-weight: 700;
       padding: 2px 8px;
       border-radius: 20px;
+      white-space: nowrap;
     }
 
-    .badge-auto { background: rgba(62,207,142,0.15); color: var(--success); }
-    .badge-manual { background: rgba(247,183,49,0.15); color: var(--warning); }
+    .badge-auto   { background: rgba(62,207,142,0.15); color: var(--success); }
+    .badge-manual { background: rgba(247,183,49,0.15);  color: var(--warning); }
 
-    .btn-reset {
+    .btn-small {
       margin-left: auto;
       background: transparent;
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--text-muted);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       padding: 3px 10px;
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-small:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Legenda de cores */
+    .prompt-legend {
+      display: flex;
+      gap: 12px;
+      padding: 6px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-wrap: wrap;
     }
 
-    .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.67rem;
+      color: var(--text-muted);
+    }
 
-    #prompt-live {
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 2px;
+    }
+
+    .dot-filled  { background: rgba(79,110,247,0.6); }
+    .dot-empty   { background: rgba(231,76,60,0.5); }
+    .dot-static  { background: var(--border); }
+
+    /* Área de exibição do prompt com highlights */
+    #prompt-display {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'Courier New', monospace;
+      font-size: 0.73rem;
+      line-height: 1.7;
+      padding: 14px;
+      min-height: 460px;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: var(--text-muted);
+      cursor: text;
+    }
+
+    /* Valores preenchidos: azul */
+    #prompt-display .vf {
+      background: rgba(79, 110, 247, 0.18);
+      color: #a5b4fc;
+      border-radius: 3px;
+      padding: 0 3px;
+      font-weight: 600;
+    }
+
+    /* Valores não preenchidos: vermelho discreto */
+    #prompt-display .ve {
+      background: rgba(231, 76, 60, 0.12);
+      color: #f87171;
+      border-radius: 3px;
+      padding: 0 3px;
+      font-style: italic;
+    }
+
+    /* Texto estático do template: cor normal */
+    #prompt-display .st { color: var(--text); }
+
+    /* Textarea para modo manual */
+    #prompt-edit {
+      display: none;
       width: 100%;
-      min-height: 420px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      min-height: 460px;
+      max-height: 70vh;
+      background: transparent;
+      border: none;
       color: var(--text);
       font-family: 'Courier New', monospace;
-      font-size: 0.75rem;
-      line-height: 1.6;
-      padding: 12px;
-      resize: vertical;
+      font-size: 0.73rem;
+      line-height: 1.7;
+      padding: 14px;
+      resize: none;
       outline: none;
-      transition: border-color 0.2s;
     }
 
-    #prompt-live:focus { border-color: var(--accent); }
-    #prompt-live.manual { border-color: var(--warning); }
+    #prompt-edit.manual-active { display: block; border-top: 2px solid var(--warning); }
 
-    .prompt-chars {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      text-align: right;
-      margin-top: 4px;
+    .prompt-footer {
+      padding: 6px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface2);
     }
+
+    .prompt-chars { font-size: 0.67rem; color: var(--text-muted); }
 
     /* Botão gerar */
     .btn-generate {
@@ -233,6 +301,7 @@
       gap: 10px;
       width: 100%;
       justify-content: center;
+      margin-top: 12px;
     }
 
     .btn-generate:hover:not(:disabled) { background: var(--accent-hover); }
@@ -255,8 +324,7 @@
     .resultado-card.visible { display: block; }
 
     .resultado-header {
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       justify-content: space-between;
       margin-bottom: 14px;
     }
@@ -277,7 +345,6 @@
       align-items: center;
       gap: 6px;
     }
-
     .btn-download:hover { border-color: var(--accent); color: var(--accent); }
 
     #imagem-gerada {
@@ -295,21 +362,8 @@
       padding: 14px;
     }
 
-    .prompt-debug summary {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .prompt-debug pre {
-      margin-top: 12px;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      white-space: pre-wrap;
-      word-break: break-word;
-      line-height: 1.6;
-    }
+    .prompt-debug summary { font-size: 0.78rem; color: var(--text-muted); cursor: pointer; user-select: none; }
+    .prompt-debug pre { margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); white-space: pre-wrap; word-break: break-word; line-height: 1.6; }
 
     .error-box {
       background: rgba(231,76,60,0.1);
@@ -320,7 +374,6 @@
       color: var(--error);
       display: none;
     }
-
     .error-box.visible { display: block; }
 
     hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
@@ -337,13 +390,13 @@
   <div class="icon">🚗</div>
   <div>
     <h1>Gerador de Croqui Técnico de Sinistro Veicular</h1>
-    <p>AutoInsp · Preencha o formulário — o prompt é gerado ao vivo e pode ser editado antes de gerar</p>
+    <p>AutoInsp · Valores do formulário destacados em azul no prompt — editável antes de gerar</p>
   </div>
 </header>
 
 <div class="workspace">
 
-  <!-- COLUNA ESQUERDA: FORMULÁRIO -->
+  <!-- ── COLUNA ESQUERDA: FORMULÁRIO ── -->
   <div class="col-form">
 
     <!-- VIA -->
@@ -405,90 +458,72 @@
 
       <!-- V1 -->
       <div class="veiculo-panel active" id="painel-v1">
-        <div class="field">
-          <label>Modelo / Tipo (V1)</label>
+        <div class="field"><label>Modelo / Tipo (V1)</label>
           <select id="v1-modelo" onchange="atualizar()">
             <option value="">Selecione...</option>
             <option>Sedan</option><option>Hatch</option><option>SUV</option>
             <option>Caminhão</option><option>Motocicleta</option><option>Ônibus</option>
-            <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option>
-            <option>Caminhonete</option>
+            <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option><option>Caminhonete</option>
           </select>
         </div>
-        <div class="field">
-          <label>Cor (V1)</label>
+        <div class="field"><label>Cor (V1)</label>
           <input type="text" id="v1-cor" placeholder="Ex: Branco" oninput="atualizar()" />
         </div>
-        <div class="field">
-          <label>Sentido de Deslocamento (V1)</label>
+        <div class="field"><label>Sentido de Deslocamento (V1)</label>
           <input type="text" id="v1-sentido" placeholder="Ex: Norte para Sul" oninput="atualizar()" />
         </div>
-        <div class="field">
-          <label>Faixa Inicial (V1)</label>
+        <div class="field"><label>Faixa Inicial (V1)</label>
           <input type="text" id="v1-faixa" placeholder="Ex: Faixa da direita" oninput="atualizar()" />
         </div>
-        <div class="field full">
-          <label>Danos (V1)</label>
+        <div class="field full"><label>Danos (V1)</label>
           <input type="text" id="v1-danos" placeholder="Ex: Dianteiro esquerdo" oninput="atualizar()" />
         </div>
       </div>
 
       <!-- V2 -->
       <div class="veiculo-panel" id="painel-v2" style="display:none">
-        <div class="field">
-          <label>Modelo / Tipo (V2)</label>
+        <div class="field"><label>Modelo / Tipo (V2)</label>
           <select id="v2-modelo" onchange="atualizar()">
             <option value="">Selecione...</option>
             <option>Sedan</option><option>Hatch</option><option>SUV</option>
             <option>Caminhão</option><option>Motocicleta</option><option>Ônibus</option>
-            <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option>
-            <option>Caminhonete</option>
+            <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option><option>Caminhonete</option>
           </select>
         </div>
-        <div class="field">
-          <label>Cor (V2)</label>
+        <div class="field"><label>Cor (V2)</label>
           <input type="text" id="v2-cor" placeholder="Ex: Preto" oninput="atualizar()" />
         </div>
-        <div class="field">
-          <label>Sentido de Deslocamento (V2)</label>
+        <div class="field"><label>Sentido de Deslocamento (V2)</label>
           <input type="text" id="v2-sentido" placeholder="Ex: Sul para Norte" oninput="atualizar()" />
         </div>
-        <div class="field">
-          <label>Faixa Inicial (V2)</label>
+        <div class="field"><label>Faixa Inicial (V2)</label>
           <input type="text" id="v2-faixa" placeholder="Ex: Faixa da esquerda" oninput="atualizar()" />
         </div>
-        <div class="field full">
-          <label>Danos (V2)</label>
+        <div class="field full"><label>Danos (V2)</label>
           <input type="text" id="v2-danos" placeholder="Ex: Traseiro central" oninput="atualizar()" />
         </div>
       </div>
 
       <!-- V3 -->
       <div class="veiculo-panel" id="painel-v3" style="display:none">
-        <div class="field">
-          <label>Modelo / Tipo (V3)</label>
+        <div class="field"><label>Modelo / Tipo (V3)</label>
           <select id="v3-modelo" onchange="atualizar()">
             <option value="">Selecione...</option>
             <option>Sedan</option><option>Hatch</option><option>SUV</option>
             <option>Caminhão</option><option>Motocicleta</option><option>Ônibus</option>
-            <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option>
-            <option>Caminhonete</option>
+            <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option><option>Caminhonete</option>
           </select>
         </div>
-        <div class="field">
-          <label>Cor (V3)</label>
+        <div class="field"><label>Cor (V3)</label>
           <input type="text" id="v3-cor" placeholder="Ex: Azul" oninput="atualizar()" />
         </div>
-        <div class="field">
-          <label>Sentido de Deslocamento (V3)</label>
+        <div class="field"><label>Sentido de Deslocamento (V3)</label>
           <input type="text" id="v3-sentido" placeholder="Ex: Leste para Oeste" oninput="atualizar()" />
         </div>
-        <div class="field">
-          <label>Faixa Inicial (V3)</label>
+        <div class="field"><label>Faixa Inicial (V3)</label>
           <input type="text" id="v3-faixa" placeholder="Ex: Faixa central" oninput="atualizar()" />
         </div>
-        <div class="field full">
-          <label>Danos (V3)</label>
+        <div class="field full"><label>Danos (V3)</label>
           <input type="text" id="v3-danos" placeholder="Ex: Lateral esquerda" oninput="atualizar()" />
         </div>
       </div>
@@ -498,16 +533,13 @@
     <div class="card">
       <div class="card-title">📋 Dinâmica do Sinistro</div>
       <div class="grid">
-        <div class="field full">
-          <label>Relato do Sinistro</label>
+        <div class="field full"><label>Relato do Sinistro</label>
           <textarea id="relato" rows="4" placeholder="Descreva como o sinistro ocorreu..." oninput="atualizar()"></textarea>
         </div>
-        <div class="field">
-          <label>Evento Inicial</label>
-          <input type="text" id="evento-inicial" placeholder="Ex: Perda de controle, colisão traseira" oninput="atualizar()" />
+        <div class="field"><label>Evento Inicial</label>
+          <input type="text" id="evento-inicial" placeholder="Ex: Perda de controle" oninput="atualizar()" />
         </div>
-        <div class="field">
-          <label>Lado do Desvio / Perda de Controle</label>
+        <div class="field"><label>Lado do Desvio / Perda de Controle</label>
           <select id="lado-desvio" onchange="atualizar()">
             <option value="">Selecione...</option>
             <option>Esquerda (do veículo)</option>
@@ -516,30 +548,24 @@
             <option>Não informado</option>
           </select>
         </div>
-        <div class="field full">
-          <label>Movimento Após o Evento</label>
-          <input type="text" id="movimento-apos" placeholder="Ex: Derrapou para a direita, colidiu contra muro" oninput="atualizar()" />
+        <div class="field full"><label>Movimento Após o Evento</label>
+          <input type="text" id="movimento-apos" placeholder="Ex: Derrapou para a direita" oninput="atualizar()" />
         </div>
-        <div class="field">
-          <label>Elemento Atingido</label>
-          <input type="text" id="elemento-atingido" placeholder="Ex: Poste, muro, valeta, outro veículo" oninput="atualizar()" />
+        <div class="field"><label>Elemento Atingido</label>
+          <input type="text" id="elemento-atingido" placeholder="Ex: Muro, poste, valeta" oninput="atualizar()" />
         </div>
-        <div class="field">
-          <label>Posição Final</label>
+        <div class="field"><label>Posição Final</label>
           <input type="text" id="posicao-final" placeholder="Ex: Lateral esquerda na valeta" oninput="atualizar()" />
         </div>
-        <div class="field full">
-          <label>Detalhamento da Posição Final</label>
-          <textarea id="detalhe-posicao" rows="2" placeholder="Ex: Dianteira esquerda dentro da valeta, traseira sobre a faixa" oninput="atualizar()"></textarea>
+        <div class="field full"><label>Detalhamento da Posição Final</label>
+          <textarea id="detalhe-posicao" rows="2" placeholder="Ex: Dianteira esquerda dentro da valeta..." oninput="atualizar()"></textarea>
         </div>
-        <div class="field full">
-          <label>Observações Adicionais</label>
-          <textarea id="observacoes" rows="2" placeholder="Qualquer informação complementar relevante..." oninput="atualizar()"></textarea>
+        <div class="field full"><label>Observações Adicionais</label>
+          <textarea id="observacoes" rows="2" placeholder="Informações complementares..." oninput="atualizar()"></textarea>
         </div>
       </div>
     </div>
 
-    <!-- BOTÃO GERAR (mobile: abaixo do form) -->
     <button class="btn-generate" id="btn-gerar" onclick="gerarCroqui()">
       <span class="spinner" id="spinner"></span>
       <span id="btn-label">🖼️ Gerar Croqui Técnico</span>
@@ -562,18 +588,56 @@
 
   </div><!-- /col-form -->
 
-  <!-- COLUNA DIREITA: PROMPT AO VIVO -->
+
+  <!-- ── COLUNA DIREITA: PROMPT AO VIVO ── -->
   <div class="col-prompt">
-    <div class="card" style="padding: 16px 18px;">
-      <div class="prompt-header">
-        <span class="prompt-title">📝 Prompt ao vivo</span>
+    <div class="prompt-card">
+
+      <!-- Toolbar -->
+      <div class="prompt-toolbar">
+        <span class="prompt-toolbar-title">📝 Prompt ao vivo</span>
         <span class="badge badge-auto" id="badge-modo">⚡ Automático</span>
-        <button class="btn-reset" id="btn-reset" onclick="resetarPrompt()" style="display:none">↺ Restaurar</button>
+        <button class="btn-small" id="btn-editar" onclick="entrarModoManual()">✏️ Editar</button>
+        <button class="btn-small" id="btn-reset" onclick="resetarPrompt()" style="display:none">↺ Restaurar</button>
       </div>
-      <textarea id="prompt-live" spellcheck="false" placeholder="Preencha os campos ao lado para ver o prompt gerado aqui..."></textarea>
-      <div class="prompt-chars" id="prompt-chars">0 caracteres</div>
+
+      <!-- Legenda -->
+      <div class="prompt-legend">
+        <div class="legend-item">
+          <div class="legend-dot dot-filled"></div>
+          <span>Valor do campo</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot dot-empty"></div>
+          <span>Campo vazio</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot dot-static"></div>
+          <span>Texto fixo do template</span>
+        </div>
+      </div>
+
+      <!-- View destacada (modo auto) -->
+      <div id="prompt-display" onclick="entrarModoManual()"></div>
+
+      <!-- Textarea (modo manual) -->
+      <textarea id="prompt-edit" spellcheck="false"></textarea>
+
+      <!-- Footer com contador -->
+      <div class="prompt-footer">
+        <span class="prompt-chars" id="prompt-chars">0 caracteres</span>
+        <span style="font-size:0.67rem; color:var(--text-muted);">Clique no texto para editar</span>
+      </div>
+
     </div>
-  </div>
+
+    <!-- Botão gerar também na coluna do prompt (conveniência) -->
+    <button class="btn-generate" onclick="gerarCroqui()" style="margin-top:12px;">
+      <span class="spinner" id="spinner2"></span>
+      <span id="btn-label2">🖼️ Gerar Croqui</span>
+    </button>
+
+  </div><!-- /col-prompt -->
 
 </div><!-- /workspace -->
 
@@ -581,66 +645,51 @@
   let v3Ativo = false;
   let modoManual = false;
 
-  // ── TABS ──
-  function trocarTab(idx) {
-    const ids = ['painel-v1', 'painel-v2', 'painel-v3'];
-    const tabs = document.querySelectorAll('.veiculo-tab');
-    tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
-    ids.forEach((id, i) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove('active');
-      el.style.display = (i === idx) ? '' : 'none';
-      if (i === idx) el.classList.add('active');
-    });
-  }
+  // ── ESCAPE HTML ──
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-  function adicionarV3() {
-    v3Ativo = true;
-    document.getElementById('btn-add-v3').style.display = 'none';
-    const tabs = document.getElementById('tabs-container');
-    const btn = document.getElementById('btn-add-v3');
-    const newTab = document.createElement('button');
-    newTab.className = 'veiculo-tab';
-    newTab.textContent = 'V3';
-    newTab.onclick = () => trocarTab(2);
-    tabs.insertBefore(newTab, btn);
-    trocarTab(2);
-    atualizar();
-  }
+  // ── HIGHLIGHT: valor preenchido ──
+  const vf = val => `<span class="vf">${esc(val)}</span>`;
 
-  // ── CONSTRUÇÃO DO PROMPT (seguindo o prompt-base do manual) ──
-  function construirPrompt() {
+  // ── HIGHLIGHT: campo vazio ──
+  const ve = (placeholder = '—') => `<span class="ve">${placeholder}</span>`;
+
+  // ── HIGHLIGHT: valor ou vazio ──
+  const v = (val, placeholder = 'não informado') =>
+    val ? vf(val) : ve(placeholder);
+
+  // ── CONSTRUIR HTML DESTACADO (para exibição) ──
+  function construirHTML() {
     const g = id => (document.getElementById(id)?.value || '').trim();
 
     const veiculosList = ['v1', 'v2', v3Ativo ? 'v3' : null].filter(Boolean);
-    const qtdVeiculos = veiculosList.length;
 
-    const dadosVeiculos = veiculosList.map((v, i) => {
+    const veiculosHTML = veiculosList.map((vid, i) => {
       const num = i + 1;
-      const linhas = [`V${num}:`];
-      const modelo = g(`${v}-modelo`);
-      const cor = g(`${v}-cor`);
-      const sentido = g(`${v}-sentido`);
-      const faixa = g(`${v}-faixa`);
-      const danos = g(`${v}-danos`);
-      if (modelo)  linhas.push(`- Modelo: ${modelo}`);
-      if (cor)     linhas.push(`- Cor: ${cor}`);
-      if (sentido) linhas.push(`- Sentido de deslocamento: ${sentido}`);
-      if (faixa)   linhas.push(`- Faixa inicial: ${faixa}`);
-      if (danos)   linhas.push(`- Danos: ${danos}`);
-      return linhas.join('\n');
+      const modelo  = g(`${vid}-modelo`);
+      const cor     = g(`${vid}-cor`);
+      const sentido = g(`${vid}-sentido`);
+      const faixa   = g(`${vid}-faixa`);
+      const danos   = g(`${vid}-danos`);
+      return [
+        `V${num}:`,
+        `- Modelo: ${v(modelo)}`,
+        `- Cor: ${v(cor)}`,
+        `- Sentido de deslocamento: ${v(sentido)}`,
+        `- Faixa inicial: ${v(faixa)}`,
+        danos ? `- Danos: ${vf(danos)}` : '',
+      ].filter(Boolean).join('\n');
     }).join('\n\n');
 
-    const secaoDinamica = [
-      g('relato')           ? `Relato do sinistro: ${g('relato')}` : '',
-      g('evento-inicial')   ? `Evento inicial: ${g('evento-inicial')}` : '',
-      g('movimento-apos')   ? `Movimento após o evento: ${g('movimento-apos')}` : '',
-      g('lado-desvio')      ? `Lado do desvio/perda de controle: ${g('lado-desvio')}` : '',
-      g('elemento-atingido')? `Elemento atingido: ${g('elemento-atingido')}` : '',
-      g('posicao-final')    ? `Posição final: ${g('posicao-final')}` : '',
-      g('detalhe-posicao')  ? `Detalhamento da posição final: ${g('detalhe-posicao')}` : '',
-      g('observacoes')      ? `Observações adicionais: ${g('observacoes')}` : '',
+    const dinamicaHTML = [
+      g('relato')            ? `Relato do sinistro: ${vf(g('relato'))}` : '',
+      g('evento-inicial')    ? `Evento inicial: ${vf(g('evento-inicial'))}` : '',
+      g('movimento-apos')    ? `Movimento após o evento: ${vf(g('movimento-apos'))}` : '',
+      g('lado-desvio')       ? `Lado do desvio/perda de controle: ${vf(g('lado-desvio'))}` : '',
+      g('elemento-atingido') ? `Elemento atingido: ${vf(g('elemento-atingido'))}` : '',
+      g('posicao-final')     ? `Posição final: ${vf(g('posicao-final'))}` : '',
+      g('detalhe-posicao')   ? `Detalhamento da posição final: ${vf(g('detalhe-posicao'))}` : '',
+      g('observacoes')       ? `Observações adicionais: ${vf(g('observacoes'))}` : '',
     ].filter(Boolean).join('\n');
 
     return `Criar croqui técnico/pericial de sinistro veicular em visão superior total, top-down, sem perspectiva, sem realismo dramático e sem estilo cinematográfico.
@@ -664,91 +713,156 @@ Respeitar rigorosamente esquerda e direita do veículo de acordo com seu sentido
 
 DADOS DO CASO:
 
-Tipo de via: ${g('tipo-via') || 'não informado'}
-Configuração da via: ${g('config-via') || 'não informado'}
-Sentido da via: ${g('sentido-via') || 'não informado'}
-Quantidade de faixas por sentido: ${g('qtd-faixas') || 'não informado'}
-Quantidade de veículos: ${qtdVeiculos}
+Tipo de via: ${v(g('tipo-via'))}
+Configuração da via: ${v(g('config-via'))}
+Sentido da via: ${v(g('sentido-via'))}
+Quantidade de faixas por sentido: ${v(g('qtd-faixas'))}
+Quantidade de veículos: ${vf(String(veiculosList.length))}
 
-${dadosVeiculos}
-${secaoDinamica ? '\n' + secaoDinamica : ''}`.replace(/\n{3,}/g, '\n\n').trim();
+${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
   }
 
-  // ── ATUALIZAÇÃO DO PROMPT AO VIVO ──
+  // ── CONSTRUIR TEXTO PURO (para enviar à API) ──
+  function construirTexto() {
+    // Remove tags HTML do HTML gerado
+    const tmp = document.createElement('div');
+    tmp.innerHTML = construirHTML();
+    return tmp.textContent.replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  // ── ATUALIZAR PAINEL ──
   function atualizar() {
     if (modoManual) return;
-    const ta = document.getElementById('prompt-live');
-    ta.value = construirPrompt();
-    atualizarContador();
+    const display = document.getElementById('prompt-display');
+    display.innerHTML = construirHTML();
+    atualizarContador(construirTexto().length);
   }
 
-  function atualizarContador() {
-    const ta = document.getElementById('prompt-live');
-    document.getElementById('prompt-chars').textContent = ta.value.length.toLocaleString('pt-BR') + ' caracteres';
+  function atualizarContador(len) {
+    document.getElementById('prompt-chars').textContent = len.toLocaleString('pt-BR') + ' caracteres';
   }
 
-  // Detectar edição manual
-  document.getElementById('prompt-live').addEventListener('input', function () {
-    if (!modoManual) {
-      modoManual = true;
-      document.getElementById('badge-modo').textContent = '✏️ Manual';
-      document.getElementById('badge-modo').className = 'badge badge-manual';
-      document.getElementById('btn-reset').style.display = '';
-      document.getElementById('prompt-live').classList.add('manual');
-    }
-    atualizarContador();
+  // ── MODO MANUAL ──
+  function entrarModoManual() {
+    if (modoManual) return;
+    modoManual = true;
+
+    const display = document.getElementById('prompt-display');
+    const edit    = document.getElementById('prompt-edit');
+
+    // Copia texto puro para o textarea
+    edit.value = construirTexto();
+    display.style.display = 'none';
+    edit.classList.add('manual-active');
+
+    document.getElementById('badge-modo').textContent  = '✏️ Manual';
+    document.getElementById('badge-modo').className    = 'badge badge-manual';
+    document.getElementById('btn-editar').style.display = 'none';
+    document.getElementById('btn-reset').style.display  = '';
+
+    const footer = document.querySelector('.prompt-footer span:last-child');
+    if (footer) footer.textContent = 'Modo manual ativo';
+
+    edit.focus();
+    atualizarContador(edit.value.length);
+  }
+
+  document.getElementById('prompt-edit').addEventListener('input', function() {
+    atualizarContador(this.value.length);
   });
 
   function resetarPrompt() {
     modoManual = false;
-    document.getElementById('badge-modo').textContent = '⚡ Automático';
-    document.getElementById('badge-modo').className = 'badge badge-auto';
-    document.getElementById('btn-reset').style.display = 'none';
-    document.getElementById('prompt-live').classList.remove('manual');
+
+    const display = document.getElementById('prompt-display');
+    const edit    = document.getElementById('prompt-edit');
+
+    edit.classList.remove('manual-active');
+    display.style.display = '';
+
+    document.getElementById('badge-modo').textContent  = '⚡ Automático';
+    document.getElementById('badge-modo').className    = 'badge badge-auto';
+    document.getElementById('btn-editar').style.display = '';
+    document.getElementById('btn-reset').style.display  = 'none';
+
+    const footer = document.querySelector('.prompt-footer span:last-child');
+    if (footer) footer.textContent = 'Clique no texto para editar';
+
+    atualizar();
+  }
+
+  // ── TABS VEÍCULOS ──
+  function trocarTab(idx) {
+    const ids  = ['painel-v1', 'painel-v2', 'painel-v3'];
+    const tabs = document.querySelectorAll('.veiculo-tab');
+    tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+    ids.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('active');
+      el.style.display = (i === idx) ? '' : 'none';
+      if (i === idx) el.classList.add('active');
+    });
+  }
+
+  function adicionarV3() {
+    v3Ativo = true;
+    document.getElementById('btn-add-v3').style.display = 'none';
+    const tabs = document.getElementById('tabs-container');
+    const btn  = document.getElementById('btn-add-v3');
+    const newTab = document.createElement('button');
+    newTab.className = 'veiculo-tab';
+    newTab.textContent = 'V3';
+    newTab.onclick = () => trocarTab(2);
+    tabs.insertBefore(newTab, btn);
+    trocarTab(2);
     atualizar();
   }
 
   // ── GERAR CROQUI ──
   async function gerarCroqui() {
-    const errBox   = document.getElementById('error-box');
+    const errBox    = document.getElementById('error-box');
     const resultado = document.getElementById('resultado');
-    const spinner  = document.getElementById('spinner');
-    const btnLabel = document.getElementById('btn-label');
-    const btn      = document.getElementById('btn-gerar');
 
     errBox.className = 'error-box';
     resultado.className = 'card resultado-card';
 
-    // Usa o prompt do textarea (auto ou editado manualmente)
-    const prompt = document.getElementById('prompt-live').value.trim();
-    if (!prompt) {
+    // Pega o prompt: manual (textarea) ou auto (texto puro)
+    const prompt = modoManual
+      ? document.getElementById('prompt-edit').value.trim()
+      : construirTexto();
+
+    if (!prompt || prompt.length < 50) {
       errBox.textContent = '⚠️ Preencha ao menos os dados básicos antes de gerar.';
       errBox.classList.add('visible');
       return;
     }
 
-    btn.disabled = true;
-    spinner.style.display = 'inline-block';
-    btnLabel.textContent = 'Gerando croqui... (pode levar até 40s)';
+    // Desabilitar ambos os botões
+    ['btn-gerar','btn-label','spinner','btn-label2','spinner2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (id === 'btn-gerar') el.disabled = true;
+      if (id.includes('label')) el.textContent = 'Gerando... (até 40s)';
+      if (id.includes('spinner')) el.style.display = 'inline-block';
+    });
 
     try {
-      const res = await fetch('/api/generate', {
+      const res  = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
       });
 
       const data = await res.json();
-
       if (!res.ok || data.error) throw new Error(data.error || `Erro HTTP ${res.status}`);
 
-      document.getElementById('imagem-gerada').src = data.url;
-      document.getElementById('btn-download').href = data.url;
-
-      const debugTexto = data.safe_prompt
-        ? `── Prompt original (você viu à direita) ──\n${prompt}\n\n── Reescrito pelo GPT-4o → DALL-E ──\n${data.safe_prompt}`
-        : prompt;
-      document.getElementById('prompt-debug-texto').textContent = debugTexto;
+      document.getElementById('imagem-gerada').src  = data.url;
+      document.getElementById('btn-download').href  = data.url;
+      document.getElementById('prompt-debug-texto').textContent =
+        data.safe_prompt
+          ? `── Prompt enviado (você viu destacado) ──\n${prompt}\n\n── Reescrito pelo GPT-4o → DALL-E 3 ──\n${data.safe_prompt}`
+          : prompt;
 
       resultado.classList.add('visible');
       resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -757,17 +871,22 @@ ${secaoDinamica ? '\n' + secaoDinamica : ''}`.replace(/\n{3,}/g, '\n\n').trim();
       errBox.textContent = '❌ ' + err.message;
       errBox.classList.add('visible');
     } finally {
-      btn.disabled = false;
-      spinner.style.display = 'none';
-      btnLabel.textContent = '🖼️ Gerar Croqui Técnico';
+      const btnGerar = document.getElementById('btn-gerar');
+      if (btnGerar) btnGerar.disabled = false;
+      ['btn-label','btn-label2'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = id === 'btn-label' ? '🖼️ Gerar Croqui Técnico' : '🖼️ Gerar Croqui';
+      });
+      ['spinner','spinner2'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
     }
   }
 
-  // Inicializar painel v2 oculto
+  // ── INIT ──
   document.getElementById('painel-v2').style.display = 'none';
   document.getElementById('painel-v3').style.display = 'none';
-
-  // Prompt inicial vazio com placeholder
   atualizar();
 </script>
 
