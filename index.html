@@ -15,6 +15,7 @@
       --text: #e8eaf0;
       --text-muted: #7a82a8;
       --success: #3ecf8e;
+      --warning: #f7b731;
       --error: #e74c3c;
       --radius: 10px;
     }
@@ -30,7 +31,7 @@
     }
 
     header {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 0 auto 32px;
       display: flex;
       align-items: center;
@@ -44,14 +45,31 @@
       background: var(--accent);
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
+      font-size: 22px; flex-shrink: 0;
     }
 
     header h1 { font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
     header p { font-size: 0.8rem; color: var(--text-muted); margin-top: 3px; }
 
-    .container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    /* Layout de duas colunas */
+    .workspace {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .col-form { display: flex; flex-direction: column; gap: 20px; }
+
+    .col-prompt {
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
     .card {
       background: var(--surface);
@@ -81,14 +99,9 @@
 
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .full { grid-column: 1 / -1; }
-
     .field { display: flex; flex-direction: column; gap: 6px; }
 
-    label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
+    label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
 
     input[type="text"], select, textarea {
       background: var(--surface2);
@@ -103,40 +116,24 @@
       width: 100%;
     }
 
-    input[type="text"]:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
-    }
-
+    input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent); }
     select option { background: var(--surface2); }
     textarea { resize: vertical; min-height: 80px; }
 
-    .veiculo-tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
+    .veiculo-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
 
     .veiculo-tab {
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 7px;
       padding: 6px 16px;
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.8rem; font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .veiculo-tab.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .veiculo-panel { display: none; }
-    .veiculo-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .veiculo-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
     .add-veiculo {
       background: transparent;
@@ -151,6 +148,76 @@
 
     .add-veiculo:hover { border-color: var(--accent); color: var(--accent); }
 
+    .veiculo-panel { display: none; }
+    .veiculo-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* Prompt ao vivo */
+    .prompt-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .prompt-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .badge-auto { background: rgba(62,207,142,0.15); color: var(--success); }
+    .badge-manual { background: rgba(247,183,49,0.15); color: var(--warning); }
+
+    .btn-reset {
+      margin-left: auto;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+
+    #prompt-live {
+      width: 100%;
+      min-height: 420px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      line-height: 1.6;
+      padding: 12px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #prompt-live:focus { border-color: var(--accent); }
+    #prompt-live.manual { border-color: var(--warning); }
+
+    .prompt-chars {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    /* Botão gerar */
     .btn-generate {
       background: var(--accent);
       border: none;
@@ -183,6 +250,7 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Resultado */
     .resultado-card { display: none; }
     .resultado-card.visible { display: block; }
 
@@ -220,23 +288,23 @@
       margin-bottom: 14px;
     }
 
-    .prompt-preview {
+    .prompt-debug {
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 14px;
     }
 
-    .prompt-preview summary {
+    .prompt-debug summary {
       font-size: 0.78rem;
       color: var(--text-muted);
       cursor: pointer;
       user-select: none;
     }
 
-    .prompt-preview pre {
+    .prompt-debug pre {
       margin-top: 12px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       white-space: pre-wrap;
       word-break: break-word;
@@ -256,6 +324,11 @@
     .error-box.visible { display: block; }
 
     hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+    @media (max-width: 900px) {
+      .workspace { grid-template-columns: 1fr; }
+      .col-prompt { position: static; }
+    }
   </style>
 </head>
 <body>
@@ -264,234 +337,251 @@
   <div class="icon">🚗</div>
   <div>
     <h1>Gerador de Croqui Técnico de Sinistro Veicular</h1>
-    <p>AutoInsp · Preencha o formulário e gere o croqui pericial com IA</p>
+    <p>AutoInsp · Preencha o formulário — o prompt é gerado ao vivo e pode ser editado antes de gerar</p>
   </div>
 </header>
 
-<div class="container">
+<div class="workspace">
 
-  <!-- VIA -->
-  <div class="card">
-    <div class="card-title">🛣️ Configuração da Via</div>
-    <div class="grid">
-      <div class="field">
-        <label>Tipo de Via</label>
-        <select id="tipo-via">
-          <option value="">Selecione...</option>
-          <option>Via urbana asfaltada</option>
-          <option>Rodovia asfaltada</option>
-          <option>Estrada de terra</option>
-          <option>Estrada rural</option>
-          <option>Cruzamento</option>
-          <option>Rotatória</option>
-          <option>Ponte</option>
-          <option>Acesso lateral</option>
-        </select>
+  <!-- COLUNA ESQUERDA: FORMULÁRIO -->
+  <div class="col-form">
+
+    <!-- VIA -->
+    <div class="card">
+      <div class="card-title">🛣️ Configuração da Via</div>
+      <div class="grid">
+        <div class="field">
+          <label>Tipo de Via</label>
+          <select id="tipo-via" onchange="atualizar()">
+            <option value="">Selecione...</option>
+            <option>Via urbana asfaltada</option>
+            <option>Rodovia asfaltada</option>
+            <option>Estrada de terra</option>
+            <option>Estrada rural</option>
+            <option>Cruzamento</option>
+            <option>Rotatória</option>
+            <option>Ponte</option>
+            <option>Acesso lateral</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Configuração da Via</label>
+          <select id="config-via" onchange="atualizar()">
+            <option value="">Selecione...</option>
+            <option>Mão única</option>
+            <option>Mão dupla</option>
+            <option>Pista simples</option>
+            <option>Pista dupla</option>
+            <option>Com acostamento</option>
+            <option>Sem acostamento</option>
+            <option>Com curva</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Sentido da Via</label>
+          <input type="text" id="sentido-via" placeholder="Ex: Norte → Sul" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Faixas por Sentido</label>
+          <select id="qtd-faixas" onchange="atualizar()">
+            <option value="">Selecione...</option>
+            <option>1 faixa</option>
+            <option>2 faixas</option>
+            <option>3 faixas</option>
+            <option>4 ou mais faixas</option>
+          </select>
+        </div>
       </div>
-      <div class="field">
-        <label>Configuração da Via</label>
-        <select id="config-via">
-          <option value="">Selecione...</option>
-          <option>Mão única</option>
-          <option>Mão dupla</option>
-          <option>Pista simples</option>
-          <option>Pista dupla</option>
-          <option>Com acostamento</option>
-          <option>Sem acostamento</option>
-          <option>Com curva</option>
-        </select>
+    </div>
+
+    <!-- VEÍCULOS -->
+    <div class="card">
+      <div class="card-title">🚙 Veículos Envolvidos</div>
+      <div class="veiculo-tabs" id="tabs-container">
+        <button class="veiculo-tab active" onclick="trocarTab(0)">V1</button>
+        <button class="veiculo-tab" onclick="trocarTab(1)">V2</button>
+        <button class="add-veiculo" id="btn-add-v3" onclick="adicionarV3()">+ V3</button>
       </div>
-      <div class="field">
-        <label>Sentido da Via</label>
-        <input type="text" id="sentido-via" placeholder="Ex: Norte → Sul, Leste → Oeste" />
+
+      <!-- V1 -->
+      <div class="veiculo-panel active" id="painel-v1">
+        <div class="field">
+          <label>Modelo / Tipo (V1)</label>
+          <select id="v1-modelo" onchange="atualizar()">
+            <option value="">Selecione...</option>
+            <option>Sedan</option><option>Hatch</option><option>SUV</option>
+            <option>Caminhão</option><option>Motocicleta</option><option>Ônibus</option>
+            <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option>
+            <option>Caminhonete</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Cor (V1)</label>
+          <input type="text" id="v1-cor" placeholder="Ex: Branco" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Sentido de Deslocamento (V1)</label>
+          <input type="text" id="v1-sentido" placeholder="Ex: Norte para Sul" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Faixa Inicial (V1)</label>
+          <input type="text" id="v1-faixa" placeholder="Ex: Faixa da direita" oninput="atualizar()" />
+        </div>
+        <div class="field full">
+          <label>Danos (V1)</label>
+          <input type="text" id="v1-danos" placeholder="Ex: Dianteiro esquerdo" oninput="atualizar()" />
+        </div>
       </div>
-      <div class="field">
-        <label>Nº de Faixas por Sentido</label>
-        <select id="qtd-faixas">
-          <option value="">Selecione...</option>
-          <option>1 faixa</option>
-          <option>2 faixas</option>
-          <option>3 faixas</option>
-          <option>4 ou mais faixas</option>
-        </select>
+
+      <!-- V2 -->
+      <div class="veiculo-panel" id="painel-v2" style="display:none">
+        <div class="field">
+          <label>Modelo / Tipo (V2)</label>
+          <select id="v2-modelo" onchange="atualizar()">
+            <option value="">Selecione...</option>
+            <option>Sedan</option><option>Hatch</option><option>SUV</option>
+            <option>Caminhão</option><option>Motocicleta</option><option>Ônibus</option>
+            <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option>
+            <option>Caminhonete</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Cor (V2)</label>
+          <input type="text" id="v2-cor" placeholder="Ex: Preto" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Sentido de Deslocamento (V2)</label>
+          <input type="text" id="v2-sentido" placeholder="Ex: Sul para Norte" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Faixa Inicial (V2)</label>
+          <input type="text" id="v2-faixa" placeholder="Ex: Faixa da esquerda" oninput="atualizar()" />
+        </div>
+        <div class="field full">
+          <label>Danos (V2)</label>
+          <input type="text" id="v2-danos" placeholder="Ex: Traseiro central" oninput="atualizar()" />
+        </div>
       </div>
+
+      <!-- V3 -->
+      <div class="veiculo-panel" id="painel-v3" style="display:none">
+        <div class="field">
+          <label>Modelo / Tipo (V3)</label>
+          <select id="v3-modelo" onchange="atualizar()">
+            <option value="">Selecione...</option>
+            <option>Sedan</option><option>Hatch</option><option>SUV</option>
+            <option>Caminhão</option><option>Motocicleta</option><option>Ônibus</option>
+            <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option>
+            <option>Caminhonete</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Cor (V3)</label>
+          <input type="text" id="v3-cor" placeholder="Ex: Azul" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Sentido de Deslocamento (V3)</label>
+          <input type="text" id="v3-sentido" placeholder="Ex: Leste para Oeste" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Faixa Inicial (V3)</label>
+          <input type="text" id="v3-faixa" placeholder="Ex: Faixa central" oninput="atualizar()" />
+        </div>
+        <div class="field full">
+          <label>Danos (V3)</label>
+          <input type="text" id="v3-danos" placeholder="Ex: Lateral esquerda" oninput="atualizar()" />
+        </div>
+      </div>
+    </div>
+
+    <!-- DINÂMICA -->
+    <div class="card">
+      <div class="card-title">📋 Dinâmica do Sinistro</div>
+      <div class="grid">
+        <div class="field full">
+          <label>Relato do Sinistro</label>
+          <textarea id="relato" rows="4" placeholder="Descreva como o sinistro ocorreu..." oninput="atualizar()"></textarea>
+        </div>
+        <div class="field">
+          <label>Evento Inicial</label>
+          <input type="text" id="evento-inicial" placeholder="Ex: Perda de controle, colisão traseira" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Lado do Desvio / Perda de Controle</label>
+          <select id="lado-desvio" onchange="atualizar()">
+            <option value="">Selecione...</option>
+            <option>Esquerda (do veículo)</option>
+            <option>Direita (do veículo)</option>
+            <option>Não houve desvio</option>
+            <option>Não informado</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Movimento Após o Evento</label>
+          <input type="text" id="movimento-apos" placeholder="Ex: Derrapou para a direita, colidiu contra muro" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Elemento Atingido</label>
+          <input type="text" id="elemento-atingido" placeholder="Ex: Poste, muro, valeta, outro veículo" oninput="atualizar()" />
+        </div>
+        <div class="field">
+          <label>Posição Final</label>
+          <input type="text" id="posicao-final" placeholder="Ex: Lateral esquerda na valeta" oninput="atualizar()" />
+        </div>
+        <div class="field full">
+          <label>Detalhamento da Posição Final</label>
+          <textarea id="detalhe-posicao" rows="2" placeholder="Ex: Dianteira esquerda dentro da valeta, traseira sobre a faixa" oninput="atualizar()"></textarea>
+        </div>
+        <div class="field full">
+          <label>Observações Adicionais</label>
+          <textarea id="observacoes" rows="2" placeholder="Qualquer informação complementar relevante..." oninput="atualizar()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTÃO GERAR (mobile: abaixo do form) -->
+    <button class="btn-generate" id="btn-gerar" onclick="gerarCroqui()">
+      <span class="spinner" id="spinner"></span>
+      <span id="btn-label">🖼️ Gerar Croqui Técnico</span>
+    </button>
+
+    <div class="error-box" id="error-box"></div>
+
+    <!-- RESULTADO -->
+    <div class="card resultado-card" id="resultado">
+      <div class="resultado-header">
+        <h3>🗺️ Croqui Técnico Gerado</h3>
+        <a class="btn-download" id="btn-download" href="#" target="_blank" rel="noopener">⬇️ Abrir / Baixar</a>
+      </div>
+      <img id="imagem-gerada" src="" alt="Croqui Técnico de Sinistro Veicular" />
+      <details class="prompt-debug">
+        <summary>Ver prompts enviados à IA</summary>
+        <pre id="prompt-debug-texto"></pre>
+      </details>
+    </div>
+
+  </div><!-- /col-form -->
+
+  <!-- COLUNA DIREITA: PROMPT AO VIVO -->
+  <div class="col-prompt">
+    <div class="card" style="padding: 16px 18px;">
+      <div class="prompt-header">
+        <span class="prompt-title">📝 Prompt ao vivo</span>
+        <span class="badge badge-auto" id="badge-modo">⚡ Automático</span>
+        <button class="btn-reset" id="btn-reset" onclick="resetarPrompt()" style="display:none">↺ Restaurar</button>
+      </div>
+      <textarea id="prompt-live" spellcheck="false" placeholder="Preencha os campos ao lado para ver o prompt gerado aqui..."></textarea>
+      <div class="prompt-chars" id="prompt-chars">0 caracteres</div>
     </div>
   </div>
 
-  <!-- VEÍCULOS -->
-  <div class="card">
-    <div class="card-title">🚙 Veículos Envolvidos</div>
-
-    <div class="veiculo-tabs" id="tabs-container">
-      <button class="veiculo-tab active" onclick="trocarTab(0)">V1</button>
-      <button class="veiculo-tab" onclick="trocarTab(1)">V2</button>
-      <button class="add-veiculo" id="btn-add-v3" onclick="adicionarV3()">+ V3</button>
-    </div>
-
-    <!-- V1 -->
-    <div class="veiculo-panel active" id="painel-v1">
-      <div class="field">
-        <label>Modelo / Tipo (V1)</label>
-        <select id="v1-modelo">
-          <option value="">Selecione...</option>
-          <option>Sedan</option><option>Hatch</option><option>SUV</option>
-          <option>Caminhão</option><option>Motocicleta</option><option>Ônibus</option>
-          <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option>
-          <option>Caminhonete</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Cor (V1)</label>
-        <input type="text" id="v1-cor" placeholder="Ex: Branco, Prata, Vermelho" />
-      </div>
-      <div class="field">
-        <label>Sentido de Deslocamento (V1)</label>
-        <input type="text" id="v1-sentido" placeholder="Ex: Norte para Sul" />
-      </div>
-      <div class="field">
-        <label>Faixa Inicial (V1)</label>
-        <input type="text" id="v1-faixa" placeholder="Ex: Faixa da direita" />
-      </div>
-      <div class="field full">
-        <label>Danos (V1)</label>
-        <input type="text" id="v1-danos" placeholder="Ex: Dianteiro esquerdo, lateral direita" />
-      </div>
-    </div>
-
-    <!-- V2 -->
-    <div class="veiculo-panel" id="painel-v2" style="display:none">
-      <div class="field">
-        <label>Modelo / Tipo (V2)</label>
-        <select id="v2-modelo">
-          <option value="">Selecione...</option>
-          <option>Sedan</option><option>Hatch</option><option>SUV</option>
-          <option>Caminhão</option><option>Motocicleta</option><option>Ônibus</option>
-          <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option>
-          <option>Caminhonete</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Cor (V2)</label>
-        <input type="text" id="v2-cor" placeholder="Ex: Preto, Azul" />
-      </div>
-      <div class="field">
-        <label>Sentido de Deslocamento (V2)</label>
-        <input type="text" id="v2-sentido" placeholder="Ex: Sul para Norte" />
-      </div>
-      <div class="field">
-        <label>Faixa Inicial (V2)</label>
-        <input type="text" id="v2-faixa" placeholder="Ex: Faixa da esquerda" />
-      </div>
-      <div class="field full">
-        <label>Danos (V2)</label>
-        <input type="text" id="v2-danos" placeholder="Ex: Traseiro central" />
-      </div>
-    </div>
-
-    <!-- V3 (oculto por padrão) -->
-    <div class="veiculo-panel" id="painel-v3" style="display:none">
-      <div class="field">
-        <label>Modelo / Tipo (V3)</label>
-        <select id="v3-modelo">
-          <option value="">Selecione...</option>
-          <option>Sedan</option><option>Hatch</option><option>SUV</option>
-          <option>Caminhão</option><option>Motocicleta</option><option>Ônibus</option>
-          <option>Utilitário</option><option>Carreta</option><option>Bicicleta</option>
-          <option>Caminhonete</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Cor (V3)</label>
-        <input type="text" id="v3-cor" placeholder="Ex: Azul" />
-      </div>
-      <div class="field">
-        <label>Sentido de Deslocamento (V3)</label>
-        <input type="text" id="v3-sentido" placeholder="Ex: Leste para Oeste" />
-      </div>
-      <div class="field">
-        <label>Faixa Inicial (V3)</label>
-        <input type="text" id="v3-faixa" placeholder="Ex: Faixa central" />
-      </div>
-      <div class="field full">
-        <label>Danos (V3)</label>
-        <input type="text" id="v3-danos" placeholder="Ex: Lateral esquerda" />
-      </div>
-    </div>
-  </div>
-
-  <!-- DINÂMICA -->
-  <div class="card">
-    <div class="card-title">📋 Dinâmica do Sinistro</div>
-    <div class="grid">
-      <div class="field full">
-        <label>Relato do Sinistro</label>
-        <textarea id="relato" rows="4" placeholder="Descreva como o sinistro ocorreu..."></textarea>
-      </div>
-      <div class="field">
-        <label>Evento Inicial</label>
-        <input type="text" id="evento-inicial" placeholder="Ex: Perda de controle, colisão traseira" />
-      </div>
-      <div class="field">
-        <label>Lado do Desvio / Perda de Controle</label>
-        <select id="lado-desvio">
-          <option value="">Selecione...</option>
-          <option>Esquerda (do veículo)</option>
-          <option>Direita (do veículo)</option>
-          <option>Não houve desvio</option>
-          <option>Não informado</option>
-        </select>
-      </div>
-      <div class="field full">
-        <label>Movimento Após o Evento</label>
-        <input type="text" id="movimento-apos" placeholder="Ex: Derrapou para a direita, colidiu contra muro" />
-      </div>
-      <div class="field">
-        <label>Elemento Atingido</label>
-        <input type="text" id="elemento-atingido" placeholder="Ex: Poste, muro, valeta, outro veículo" />
-      </div>
-      <div class="field">
-        <label>Posição Final</label>
-        <input type="text" id="posicao-final" placeholder="Ex: Lateral esquerda na valeta" />
-      </div>
-      <div class="field full">
-        <label>Detalhamento da Posição Final</label>
-        <textarea id="detalhe-posicao" rows="2" placeholder="Ex: Dianteira esquerda dentro da valeta, traseira sobre a faixa de rodagem"></textarea>
-      </div>
-      <div class="field full">
-        <label>Observações Adicionais</label>
-        <textarea id="observacoes" rows="2" placeholder="Qualquer informação complementar relevante..."></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- BOTÃO GERAR -->
-  <button class="btn-generate" id="btn-gerar" onclick="gerarCroqui()">
-    <span class="spinner" id="spinner"></span>
-    <span id="btn-label">🖼️ Gerar Croqui Técnico</span>
-  </button>
-
-  <!-- ERRO -->
-  <div class="error-box" id="error-box"></div>
-
-  <!-- RESULTADO -->
-  <div class="card resultado-card" id="resultado">
-    <div class="resultado-header">
-      <h3>🗺️ Croqui Técnico Gerado</h3>
-      <a class="btn-download" id="btn-download" href="#" target="_blank" rel="noopener">⬇️ Abrir / Baixar</a>
-    </div>
-    <img id="imagem-gerada" src="" alt="Croqui Técnico de Sinistro Veicular" />
-    <details class="prompt-preview">
-      <summary>Ver prompt enviado à IA</summary>
-      <pre id="prompt-texto"></pre>
-    </details>
-  </div>
-
-</div>
+</div><!-- /workspace -->
 
 <script>
   let v3Ativo = false;
+  let modoManual = false;
 
-  // ---- TABS ----
+  // ── TABS ──
   function trocarTab(idx) {
     const ids = ['painel-v1', 'painel-v2', 'painel-v3'];
     const tabs = document.querySelectorAll('.veiculo-tab');
@@ -516,81 +606,130 @@
     newTab.onclick = () => trocarTab(2);
     tabs.insertBefore(newTab, btn);
     trocarTab(2);
+    atualizar();
   }
 
-  // ---- PROMPT ----
+  // ── CONSTRUÇÃO DO PROMPT (seguindo o prompt-base do manual) ──
   function construirPrompt() {
     const g = id => (document.getElementById(id)?.value || '').trim();
 
     const veiculosList = ['v1', 'v2', v3Ativo ? 'v3' : null].filter(Boolean);
-    const veiculos = veiculosList.map((v, i) => {
-      const m = g(`${v}-modelo`), c = g(`${v}-cor`), s = g(`${v}-sentido`), f = g(`${v}-faixa`), d = g(`${v}-danos`);
-      return `V${i+1}: ${m||'veículo'}${c?', color '+c:''}${s?', moving toward '+s:''}${f?', lane: '+f:''}${d?', contact area: '+d:''}`;
-    }).join('\n');
+    const qtdVeiculos = veiculosList.length;
 
-    const linhas = [
-      `Flat overhead technical schematic diagram (bird's-eye view, 90° top-down, no perspective, no 3D, no artistic style) for traffic engineering documentation and insurance assessment purposes.`,
-      ``,
-      `This is a purely technical 2D diagram similar to a traffic engineering blueprint or road safety audit sketch.`,
-      ``,
-      `Include a text label in the upper-left corner, left-aligned: CROQUI TÉCNICO DE SINISTRO VEICULAR`,
-      ``,
-      `The diagram is divided into three vertically stacked labeled panels:`,
-      `Panel 1 label: "Fase 1 - Deslocamento inicial"`,
-      `Panel 2 label: "Fase 2 - Ponto do evento"`,
-      `Panel 3 label: "Fase 3 - Posição final"`,
-      ``,
-      `ROAD: ${g('tipo-via')||'paved road'}. Layout: ${g('config-via')||'single carriageway'}. Direction: ${g('sentido-via')||'unspecified'}. Lanes per direction: ${g('qtd-faixas')||'1'}.`,
-      ``,
-      `VEHICLES (top-down view only):`,
-      veiculos,
-      ``,
-      `TRAFFIC FLOW SEQUENCE:`,
-      g('relato') ? `Description: ${g('relato')}` : '',
-      g('evento-inicial') ? `Initial movement: ${g('evento-inicial')}` : '',
-      g('lado-desvio') ? `Direction of deviation: ${g('lado-desvio')}` : '',
-      g('movimento-apos') ? `Subsequent movement: ${g('movimento-apos')}` : '',
-      g('elemento-atingido') ? `Fixed element in contact: ${g('elemento-atingido')}` : '',
-      g('posicao-final') ? `Final resting position: ${g('posicao-final')}` : '',
-      g('detalhe-posicao') ? `Position detail: ${g('detalhe-posicao')}` : '',
-      g('observacoes') ? `Additional notes: ${g('observacoes')}` : '',
-      ``,
-      `DIAGRAM REQUIREMENTS:`,
-      `- All vehicles shown strictly from directly above (flat top-down 2D, like a map symbol).`,
-      `- Road with lane markings, travel directions, shoulders or margins as described.`,
-      `- Each vehicle placed exactly in its specified lane.`,
-      `- Red directional arrows showing travel path and movement sequence.`,
-      `- Panel 1 only: small identification tag beside each vehicle showing V1, V2, V3 only.`,
-      `- Panels 2 and 3: no tags, no text boxes, no callouts — only short labels V1/V2/V3 near vehicles.`,
-      `- Structural contact areas shown directly on the correct sector of each vehicle, discreetly and schematically.`,
-      `- Left and right always from the vehicle's own perspective relative to its direction of travel.`,
-      `- Ditches, embankments and shoulders always outside the travel lane.`,
-      `- No bottom legend, no side legend, no narrative text, no explanatory labels.`,
-      `- No people, no fire, no smoke, no blood, no realistic imagery, no car brand logos, no license plates.`,
-      `- Do not add any elements not described in the sequence above.`,
-      `- Style: clean flat technical schematic, useful for traffic engineering and insurance documentation.`,
-    ].filter(l => l !== null && l !== '');
+    const dadosVeiculos = veiculosList.map((v, i) => {
+      const num = i + 1;
+      const linhas = [`V${num}:`];
+      const modelo = g(`${v}-modelo`);
+      const cor = g(`${v}-cor`);
+      const sentido = g(`${v}-sentido`);
+      const faixa = g(`${v}-faixa`);
+      const danos = g(`${v}-danos`);
+      if (modelo)  linhas.push(`- Modelo: ${modelo}`);
+      if (cor)     linhas.push(`- Cor: ${cor}`);
+      if (sentido) linhas.push(`- Sentido de deslocamento: ${sentido}`);
+      if (faixa)   linhas.push(`- Faixa inicial: ${faixa}`);
+      if (danos)   linhas.push(`- Danos: ${danos}`);
+      return linhas.join('\n');
+    }).join('\n\n');
 
-    return linhas.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+    const secaoDinamica = [
+      g('relato')           ? `Relato do sinistro: ${g('relato')}` : '',
+      g('evento-inicial')   ? `Evento inicial: ${g('evento-inicial')}` : '',
+      g('movimento-apos')   ? `Movimento após o evento: ${g('movimento-apos')}` : '',
+      g('lado-desvio')      ? `Lado do desvio/perda de controle: ${g('lado-desvio')}` : '',
+      g('elemento-atingido')? `Elemento atingido: ${g('elemento-atingido')}` : '',
+      g('posicao-final')    ? `Posição final: ${g('posicao-final')}` : '',
+      g('detalhe-posicao')  ? `Detalhamento da posição final: ${g('detalhe-posicao')}` : '',
+      g('observacoes')      ? `Observações adicionais: ${g('observacoes')}` : '',
+    ].filter(Boolean).join('\n');
+
+    return `Criar croqui técnico/pericial de sinistro veicular em visão superior total, top-down, sem perspectiva, sem realismo dramático e sem estilo cinematográfico.
+
+Título fixo no canto superior esquerdo: CROQUI TÉCNICO DE SINISTRO VEICULAR.
+
+Imagem dividida em três fases empilhadas verticalmente:
+Fase 1 - Deslocamento inicial
+Fase 2 - Evento / colisão
+Fase 3 - Posição final
+
+Representar a via conforme o caso informado, com faixas, sentidos de circulação, acostamento, margens ou elementos citados. Posicionar cada veículo exatamente na faixa informada. Usar setas vermelhas para trajetória e sentido de deslocamento. Representar os veículos vistos exatamente de cima, identificados como V1, V2, V3 conforme necessário, respeitando suas cores informadas.
+
+Na Fase 1, usar apenas cards pequenos de identificação contendo somente V1, V2, V3, próximos aos veículos. Nas fases seguintes, não usar cards, caixas de texto, callouts, legendas ou explicações narrativas.
+
+Representar visualmente o evento principal, ponto de contato, desvio, frenagem, perda de controle, colisão, elemento atingido e posição final conforme o relato. Representar danos diretamente no setor correto do veículo, de forma discreta e esquemática, sem exagero.
+
+Não inserir pessoas, sangue, fogo, fumaça, placas reais, logotipos, marcas de montadoras, legendas, textos narrativos ou miniaturas. Não inventar obstáculos, valetas, danos, veículos ou eventos não descritos no caso.
+
+Respeitar rigorosamente esquerda e direita do veículo de acordo com seu sentido de deslocamento, e não de acordo com o lado visual da imagem.
+
+DADOS DO CASO:
+
+Tipo de via: ${g('tipo-via') || 'não informado'}
+Configuração da via: ${g('config-via') || 'não informado'}
+Sentido da via: ${g('sentido-via') || 'não informado'}
+Quantidade de faixas por sentido: ${g('qtd-faixas') || 'não informado'}
+Quantidade de veículos: ${qtdVeiculos}
+
+${dadosVeiculos}
+${secaoDinamica ? '\n' + secaoDinamica : ''}`.replace(/\n{3,}/g, '\n\n').trim();
   }
 
-  // ---- GERAR ----
+  // ── ATUALIZAÇÃO DO PROMPT AO VIVO ──
+  function atualizar() {
+    if (modoManual) return;
+    const ta = document.getElementById('prompt-live');
+    ta.value = construirPrompt();
+    atualizarContador();
+  }
+
+  function atualizarContador() {
+    const ta = document.getElementById('prompt-live');
+    document.getElementById('prompt-chars').textContent = ta.value.length.toLocaleString('pt-BR') + ' caracteres';
+  }
+
+  // Detectar edição manual
+  document.getElementById('prompt-live').addEventListener('input', function () {
+    if (!modoManual) {
+      modoManual = true;
+      document.getElementById('badge-modo').textContent = '✏️ Manual';
+      document.getElementById('badge-modo').className = 'badge badge-manual';
+      document.getElementById('btn-reset').style.display = '';
+      document.getElementById('prompt-live').classList.add('manual');
+    }
+    atualizarContador();
+  });
+
+  function resetarPrompt() {
+    modoManual = false;
+    document.getElementById('badge-modo').textContent = '⚡ Automático';
+    document.getElementById('badge-modo').className = 'badge badge-auto';
+    document.getElementById('btn-reset').style.display = 'none';
+    document.getElementById('prompt-live').classList.remove('manual');
+    atualizar();
+  }
+
+  // ── GERAR CROQUI ──
   async function gerarCroqui() {
-    const errBox = document.getElementById('error-box');
+    const errBox   = document.getElementById('error-box');
     const resultado = document.getElementById('resultado');
-    const spinner = document.getElementById('spinner');
+    const spinner  = document.getElementById('spinner');
     const btnLabel = document.getElementById('btn-label');
-    const btn = document.getElementById('btn-gerar');
+    const btn      = document.getElementById('btn-gerar');
 
     errBox.className = 'error-box';
     resultado.className = 'card resultado-card';
 
-    const prompt = construirPrompt();
-    document.getElementById('prompt-texto').textContent = prompt;
+    // Usa o prompt do textarea (auto ou editado manualmente)
+    const prompt = document.getElementById('prompt-live').value.trim();
+    if (!prompt) {
+      errBox.textContent = '⚠️ Preencha ao menos os dados básicos antes de gerar.';
+      errBox.classList.add('visible');
+      return;
+    }
 
     btn.disabled = true;
     spinner.style.display = 'inline-block';
-    btnLabel.textContent = 'Gerando croqui... (pode levar até 30s)';
+    btnLabel.textContent = 'Gerando croqui... (pode levar até 40s)';
 
     try {
       const res = await fetch('/api/generate', {
@@ -601,17 +740,16 @@
 
       const data = await res.json();
 
-      if (!res.ok || data.error) {
-        throw new Error(data.error || `Erro HTTP ${res.status}`);
-      }
+      if (!res.ok || data.error) throw new Error(data.error || `Erro HTTP ${res.status}`);
 
       document.getElementById('imagem-gerada').src = data.url;
       document.getElementById('btn-download').href = data.url;
-      if (data.safe_prompt) {
-        document.getElementById('prompt-texto').textContent =
-          '── Prompt original ──\n' + prompt +
-          '\n\n── Prompt reescrito pelo GPT-4o (enviado ao DALL-E) ──\n' + data.safe_prompt;
-      }
+
+      const debugTexto = data.safe_prompt
+        ? `── Prompt original (você viu à direita) ──\n${prompt}\n\n── Reescrito pelo GPT-4o → DALL-E ──\n${data.safe_prompt}`
+        : prompt;
+      document.getElementById('prompt-debug-texto').textContent = debugTexto;
+
       resultado.classList.add('visible');
       resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -624,6 +762,13 @@
       btnLabel.textContent = '🖼️ Gerar Croqui Técnico';
     }
   }
+
+  // Inicializar painel v2 oculto
+  document.getElementById('painel-v2').style.display = 'none';
+  document.getElementById('painel-v3').style.display = 'none';
+
+  // Prompt inicial vazio com placeholder
+  atualizar();
 </script>
 
 </body>
