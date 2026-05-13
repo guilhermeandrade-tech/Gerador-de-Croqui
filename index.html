@@ -721,17 +721,21 @@ FORMATO: Imagem vertical (retrato). Três painéis retangulares separados empilh
 - Painel inferior: "Fase 3 - Posição final"
 Título "CROQUI TÉCNICO DE SINISTRO VEICULAR" no canto superior esquerdo acima de todos os painéis.
 
-VISÃO: Vista aérea realista com câmera posicionada diretamente acima, apontada 90° para baixo. Estilo imagem de satélite ou drone em alta resolução. SEM perspectiva angular, SEM isométrica, SEM inclinação de câmera. O solo deve parecer completamente plano visto de cima.
+VISÃO: Vista aérea com câmera 90° diretamente acima. Estilo satélite/drone em alta resolução. SEM perspectiva angular, SEM isométrica, SEM inclinação.
 
-VEÍCULOS: Veículos realistas vistos diretamente de cima — com forma, cor e textura compatíveis com o tipo informado. Rótulos V1, V2, V3 sobrepostos em texto pequeno. SEM figuras humanas, SEM passageiros, SEM capacetes visíveis.
+VIA OBRIGATORIAMENTE HORIZONTAL: em todos os painéis a via deve correr HORIZONTALMENTE da esquerda para a direita (ou da direita para a esquerda conforme o sentido). NUNCA representar a via no sentido vertical (de cima para baixo). NUNCA diagonal.
 
-VIA: Superfície com textura realista conforme o tipo de via (terra batida com marcas de pneu, asfalto com faixas, etc.). Laterais, acostamento e margens visíveis.
+VEÍCULOS: Realistas vistos de cima — forma, cor e textura do tipo informado. Orientados horizontalmente conforme o sentido de deslocamento. Rótulos V1, V2, V3 sobrepostos. SEM figuras humanas, SEM passageiros.
 
-SETAS: Setas vermelhas destacadas indicando trajetória e sentido de deslocamento, sobrepostas à cena.
+VIA: Textura realista conforme o tipo (terra batida com marcas de pneu, asfalto com faixas). Laterais e margens visíveis.
 
-PROIBIDO: pessoas visíveis, ângulo de câmera lateral ou inclinado, perspectiva cinematográfica, legendas, caixas de texto, callouts. Apenas rótulos V1/V2/V3 e títulos dos painéis são permitidos.
+SETAS: Setas vermelhas sobrepostas mostrando APENAS o movimento que realmente ocorreu. Não inventar rotação, deslizamento ou movimento não descrito no relato.
 
-ESQUERDA/DIREITA: sempre relativa ao sentido de deslocamento de cada veículo, não ao lado visual da imagem.
+FOGO: somente se descrito no relato, mostrado no setor exato do veículo informado (dianteira, traseira, lateral), não em posição genérica.
+
+PROIBIDO: pessoas, perspectiva cinematográfica, legendas, caixas de texto, callouts, movimento inventado.
+
+ESQUERDA/DIREITA: sempre relativa ao sentido de deslocamento do veículo, não ao lado visual da imagem.
 
 DADOS DO CASO:
 
@@ -938,29 +942,33 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
     // Via
     setSelectByText('tipo-via',   'Estrada de terra');
     setSelectByText('config-via', 'Mão única');
-    setVal('sentido-via',  'Oeste para Leste');
+    setVal('sentido-via',  'Esquerda para Direita (Oeste → Leste). A via corre horizontalmente nos painéis.');
     setVal('qtd-faixas',   '1');
 
     // V1 — Hatch branco
     setSelectByText('v1-modelo', 'Hatch');
     setVal('v1-cor',     'Branco');
-    setVal('v1-sentido', 'Oeste para Leste');
-    setVal('v1-faixa',   'Faixa única central');
-    setVal('v1-danos',   'Dianteira direita e parte inferior');
+    setVal('v1-sentido', 'Da esquerda para a direita (Oeste → Leste)');
+    setVal('v1-faixa',   'Faixa única, centro da via');
+    setVal('v1-danos',   'Dianteira direita (roda dianteira direita atingiu o buraco) e parte inferior');
 
     // Dinâmica
     setVal('relato',
-      'Veículo trafegava por estrada rural de terra quando a dianteira atingiu um buraco existente na pista. ' +
-      'Após o impacto, o veículo perdeu o controle, parou na própria faixa e entrou em chamas.');
-    setVal('evento-inicial',  'Impacto com buraco na pista');
+      'Veículo hatch branco trafegava em linha reta pela faixa única de uma estrada de terra, ' +
+      'deslocando-se da esquerda para a direita. A roda dianteira direita do veículo caiu em um buraco ' +
+      'existente na pista. O veículo parou na própria faixa, sem rotacionar. ' +
+      'Após imobilização, iniciou-se um incêndio na parte dianteira direita do veículo.');
+    setVal('evento-inicial',  'Roda dianteira direita do V1 caiu em buraco na pista');
     setSelectByText('lado-desvio', 'Não houve desvio');
-    setVal('movimento-apos',  'Veículo desacelerou e parou na faixa após o impacto');
-    setVal('elemento-atingido', 'Buraco profundo na pista');
-    setVal('posicao-final',   'Veículo parado na faixa única em chamas');
+    setVal('movimento-apos',  'Veículo desacelerou em linha reta e parou na própria faixa, sem rotacionar');
+    setVal('elemento-atingido', 'Buraco na pista (posicionado à direita do eixo dianteiro do veículo)');
+    setVal('posicao-final',   'V1 parado na faixa única, orientação horizontal, em chamas na dianteira direita');
     setVal('detalhe-posicao',
-      'V1 imobilizado na faixa. Dianteira direita com marca de impacto. Incêndio iniciado na parte dianteira e se alastrou para o interior do veículo.');
+      'V1 imobilizado na faixa, mantendo orientação horizontal (não rotacionou). ' +
+      'Incêndio visível na dianteira direita do veículo. O buraco está posicionado logo à frente e à direita da dianteira do V1.');
     setVal('observacoes',
-      'Incêndio confirmado no relato. Via rural de terra sem acostamento pavimentado.');
+      'Não houve rotação nem derrapagem. O veículo manteve sua orientação original (horizontal, da esquerda para a direita). ' +
+      'Incêndio confirmado no relato, originado na dianteira direita.');
 
     atualizar();
 
