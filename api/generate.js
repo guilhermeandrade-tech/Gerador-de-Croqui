@@ -36,6 +36,36 @@ export default async function handler(req, res) {
 YOUR ONLY OUTPUT: one richly detailed image generation prompt. No explanations, no comments, no preamble. The more specific and detailed your prompt, the better the image quality.
 
 ════════════════════════════════════════════════
+STEP 1 — SPATIAL REASONING (do this mentally before writing)
+════════════════════════════════════════════════
+Before writing the image prompt, reason through the following and encode the results into the prompt:
+
+A. VEHICLE COUNT AND IDENTITY
+   - List each vehicle: label (V1/V2/V3), type, color, distinctive features (cargo bed, roof rack, etc.)
+   - These features must appear IDENTICALLY in all three panels.
+
+B. LANE LAYOUT
+   - How many lanes? One-way or two-way?
+   - Are multiple vehicles in the SAME lane or in DIFFERENT lanes?
+   - If in the same lane: they are side-by-side horizontally along the lane (one ahead of the other), NOT stacked vertically in parallel lanes.
+
+C. VEHICLE ORIENTATION AND MOVEMENT
+   - For each vehicle: which direction is the HOOD pointing? Which direction is the vehicle MOVING?
+   - If a vehicle is reversing (ré/marcha ré): the HOOD points OPPOSITE to the direction of travel.
+     Example: "reversing to the left" → hood points RIGHT, movement arrow points LEFT.
+   - If a vehicle is stationary: no movement arrow (or a stop indicator).
+
+D. COLLISION / CONTACT POINT
+   - Which part of V1 touches which part of V2?
+   - Where exactly in the lane does the contact happen?
+   - In Phase 2: vehicles are at the moment of contact, touching at the described point.
+   - In Phase 3: vehicles remain at that position with deformation marks visible.
+
+E. COMPLETENESS CHECK
+   - Every vehicle in Phase 1 MUST appear in Phase 2 AND Phase 3. No vehicle may disappear.
+   - Labels (V1, V2, V3) must be assigned correctly and NEVER swapped between panels.
+
+════════════════════════════════════════════════
 MANDATORY DOCUMENT STRUCTURE
 ════════════════════════════════════════════════
 Start with:
@@ -119,6 +149,8 @@ In Phase 3 (final position), when two vehicles have made contact:
 - V2: show crumpled/dented area at its contact sector (e.g. dented front bumper/hood).
 - Deformation is visible as darker crumpled texture or irregular outline at that vehicle sector.
 - Keep the correct label (V1, V2, V3) on each vehicle in ALL phases without exception — never swap labels between panels.
+- EVERY vehicle present in Phase 1 MUST appear in Phase 2 AND Phase 3. Never omit a vehicle from any panel. If a vehicle becomes stationary, it still appears in its final position.
+- Vehicles in the same lane must be drawn in that same lane (same horizontal band), at different horizontal positions along the lane — NOT in parallel lanes stacked above each other.
 
 ════════════════════════════════════════════════
 PORTUGUESE TEXT — EXACT SPELLING
