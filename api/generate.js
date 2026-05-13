@@ -82,8 +82,36 @@ VISUAL STYLE
 PHASE ACCURACY
 ════════════════════════════════════════════════
 - Phase 1: vehicle at starting position, oriented in travel direction, red directional arrow.
-- Phase 2: vehicle at moment of the described event only. Show the road feature (hole, bump, etc.) at the exact relative position to the vehicle described. NO added rotation or movement not stated.
-- Phase 3: vehicle at exact final resting position as stated. Fire/damage at the specific sector stated. Vehicle keeps same orientation as Phase 1 unless rotation is explicitly described.
+
+- Phase 2: show ONLY the event that actually happened, with these rules:
+  * Road features (hole, pothole, bump): draw the feature AT the vehicle's wheel that contacted it. The vehicle overlaps the feature — they are in contact, not separated.
+  * The red arrow must show only the movement that occurred up to this point.
+  * NO added rotation, spin, or movement not stated in the incident data.
+
+- Phase 3: vehicle at final resting position:
+  * If the vehicle stopped ON or OVER a road feature (hole, bump), the vehicle must be drawn OVERLAPPING that feature — the feature is under the vehicle, at the wheel position stated.
+  * Fire/flames: shown at the EXACT sector stated (front-right, rear-left, etc.) ON the vehicle surface.
+  * Vehicle keeps same orientation as Phase 1 unless rotation is explicitly described.
+  * All vehicle labels (V1, V2, V3) must be correct — do not swap or repeat labels.
+
+════════════════════════════════════════════════
+REVERSE VEHICLE RULE
+════════════════════════════════════════════════
+When a vehicle is described as reversing (ré, going backwards):
+- Its FRONT (hood) points AWAY from the direction of movement.
+- Example: a vehicle reversing to the LEFT has its FRONT pointing RIGHT and moves LEFTWARD.
+- Draw the vehicle with its front in the opposite direction of the movement arrow.
+- The movement arrow points in the direction of actual travel (e.g. leftward for a vehicle in reverse going left).
+
+════════════════════════════════════════════════
+PORTUGUESE TEXT ACCURACY
+════════════════════════════════════════════════
+All panel labels must use exact correct Portuguese:
+- "Fase 1 - Deslocamento inicial" (NOT "inicíal", NOT "Inicial")
+- "Fase 2 - Ponto do evento"
+- "Fase 3 - Posição final"
+- Title: "CROQUI TÉCNICO VEICULAR"
+No accents on capital letters unless explicitly correct in Portuguese.
 
 ════════════════════════════════════════════════
 SAFETY REPLACEMENTS

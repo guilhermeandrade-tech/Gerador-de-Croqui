@@ -961,19 +961,22 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
     setVal('relato',
       'Veículo hatch branco trafegava em linha reta pela faixa única de uma estrada de terra, ' +
       'deslocando-se da esquerda para a direita. A roda dianteira direita do veículo caiu em um buraco ' +
-      'existente na pista. O veículo parou na própria faixa, sem rotacionar. ' +
-      'Após imobilização, iniciou-se um incêndio na parte dianteira direita do veículo.');
-    setVal('evento-inicial',  'Roda dianteira direita do V1 caiu em buraco na pista');
+      'existente na pista. O veículo parou com a roda dianteira direita dentro do buraco, sem rotacionar. ' +
+      'Após imobilização, iniciou-se um incêndio na parte dianteira direita do veículo, que se alastrou.');
+    setVal('evento-inicial',  'Roda dianteira direita de V1 caiu dentro do buraco na pista');
     setSelectByText('lado-desvio', 'Não houve desvio');
-    setVal('movimento-apos',  'Veículo desacelerou em linha reta e parou na própria faixa, sem rotacionar');
-    setVal('elemento-atingido', 'Buraco na pista (posicionado à direita do eixo dianteiro do veículo)');
-    setVal('posicao-final',   'V1 parado na faixa única, orientação horizontal, em chamas na dianteira direita');
+    setVal('movimento-apos',  'Veículo desacelerou abruptamente e parou com a roda dianteira direita dentro do buraco');
+    setVal('elemento-atingido', 'Buraco na pista');
+    setVal('posicao-final',   'V1 parado com roda dianteira direita dentro do buraco. Incêndio na dianteira direita.');
     setVal('detalhe-posicao',
-      'V1 imobilizado na faixa, mantendo orientação horizontal (não rotacionou). ' +
-      'Incêndio visível na dianteira direita do veículo. O buraco está posicionado logo à frente e à direita da dianteira do V1.');
+      'Fase 2: roda dianteira direita de V1 está em contato com/dentro do buraco — o buraco aparece sob a roda dianteira direita do veículo, não separado dele. ' +
+      'Fase 3: V1 imobilizado com a roda dianteira direita sobre o buraco (buraco visível sob o veículo). ' +
+      'Incêndio visível na dianteira direita do veículo, sobre a superfície do capô e roda. ' +
+      'O veículo manteve orientação horizontal (não rotacionou).');
     setVal('observacoes',
-      'Não houve rotação nem derrapagem. O veículo manteve sua orientação original (horizontal, da esquerda para a direita). ' +
-      'Incêndio confirmado no relato, originado na dianteira direita.');
+      'O buraco deve aparecer SOB o veículo na Fase 3 (a roda está dentro dele). ' +
+      'Na Fase 2 o buraco também já deve estar sob a roda, não separado. ' +
+      'Não houve rotação. Incêndio confirmado, originado na dianteira direita.');
 
     atualizar();
 
@@ -995,42 +998,55 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
     // Via
     setSelectByText('tipo-via',   'Via urbana asfaltada');
     setSelectByText('config-via', 'Mão única');
-    setVal('sentido-via',  'Da esquerda para a direita. Via com uma faixa. Acesso lateral (saída de sítio) no lado superior da via.');
+    setVal('sentido-via',  'Fluxo da via: da esquerda para a direita. Uma faixa. Acesso lateral (saída de sítio) na margem superior da via.');
     setVal('qtd-faixas',   '1');
 
-    // V1 — Caminhonete prata (fazendo ré)
+    // V1 — Caminhonete prata (fazendo ré para a esquerda)
     setSelectByText('v1-modelo', 'Caminhonete');
     setVal('v1-cor',     'Prata');
-    setVal('v1-sentido', 'Fazendo ré da direita para a esquerda (sentido contrário ao fluxo)');
-    setVal('v1-faixa',   'Faixa única, lado direito da cena');
-    setVal('v1-danos',   'Traseira esquerda');
+    setVal('v1-sentido',
+      'FAZENDO RÉ: dianteira de V1 aponta para a DIREITA, mas o veículo se move para a ESQUERDA. ' +
+      'V1 começa à DIREITA da cena e recua para a esquerda.');
+    setVal('v1-faixa',   'Faixa única — posição inicial: lado direito da cena');
+    setVal('v1-danos',   'Traseira (lado esquerdo do veículo, pois a dianteira aponta para a direita)');
 
-    // V2 — Caminhonete vermelha (estacionada, parada)
+    // V2 — Caminhonete vermelha com carroceria (estacionada, à esquerda de V1)
     setSelectByText('v2-modelo', 'Caminhonete');
     setVal('v2-cor',     'Vermelho');
-    setVal('v2-sentido', 'Parado (estacionado para entrega), orientado da esquerda para a direita na faixa');
-    setVal('v2-faixa',   'Faixa única, lado esquerdo da cena, à frente do ponto de ré de V1');
-    setVal('v2-danos',   'Dianteira');
+    setVal('v2-sentido',
+      'PARADO. Dianteira de V2 aponta para a DIREITA (no sentido do fluxo). ' +
+      'V2 está À ESQUERDA de V1 na cena. V2 tem carroceria de madeira na traseira.');
+    setVal('v2-faixa',   'Faixa única — lado esquerdo da cena, à esquerda de V1');
+    setVal('v2-danos',   'Dianteira (lado direito do veículo, pois a dianteira aponta para a direita)');
 
     // Dinâmica
     setVal('relato',
-      'V1 (caminhonete prata) estava parado próximo a uma saída lateral (saída de sítio) e iniciou manobra de ré ' +
-      'em linha reta pela faixa única. V2 (caminhonete vermelha com carroceria de madeira) estava parado na mesma ' +
-      'faixa à esquerda de V1, estacionado para entrega. V1 percorreu em ré sem desviar e a traseira esquerda de V1 ' +
-      'colidiu com a dianteira de V2. V2 permaneceu parado durante todo o evento.');
-    setVal('evento-inicial',  'V1 iniciou manobra de ré em linha reta na faixa única');
+      'V2 (caminhonete vermelha com carroceria de madeira) estava parado na faixa única, ' +
+      'estacionado para entrega, com a dianteira apontando para a direita, no lado esquerdo da cena. ' +
+      'V1 (caminhonete prata) estava à direita de V2, com a dianteira também apontando para a direita, ' +
+      'próximo a uma saída lateral (saída de sítio) na margem superior da via. ' +
+      'V1 iniciou manobra de ré (movendo-se para a esquerda, em sentido contrário ao fluxo) em linha reta, ' +
+      'sem desviar. A traseira de V1 (extremidade esquerda do veículo) avançou em direção à dianteira de V2 ' +
+      '(extremidade direita do veículo). Houve contato entre a traseira de V1 e a dianteira de V2. ' +
+      'V2 permaneceu completamente parado durante todo o evento.');
+    setVal('evento-inicial',  'V1 iniciou manobra de ré (movendo-se para a esquerda) em linha reta');
     setSelectByText('lado-desvio', 'Não houve desvio');
-    setVal('movimento-apos',  'V1 continuou em ré em linha reta até encostar na dianteira de V2. V2 permaneceu imóvel.');
-    setVal('elemento-atingido', 'Dianteira de V2');
-    setVal('posicao-final',   'Traseira esquerda de V1 em contato com a dianteira de V2, ambos na faixa única');
+    setVal('movimento-apos',  'V1 continuou recuando em linha reta até a traseira tocar a dianteira de V2');
+    setVal('elemento-atingido', 'Dianteira de V2 (extremidade direita de V2)');
+    setVal('posicao-final',
+      'Traseira de V1 encostada na dianteira de V2. Ambos na faixa única. ' +
+      'V1 com dianteira para a direita. V2 com dianteira para a direita, parado.');
     setVal('detalhe-posicao',
-      'V1 com traseira encostada na dianteira de V2. V1 orientado com dianteira para a direita e traseira para a esquerda ' +
-      '(posição de ré). V2 orientado com dianteira para a direita, parado. ' +
-      'Ponto de contato: traseira esquerda de V1 x dianteira de V2. ' +
-      'Saída lateral (saída de sítio) visível na margem superior da via, entre as posições iniciais dos dois veículos.');
+      'Posicionamento na cena (da esquerda para a direita): V2 à esquerda, V1 à direita — em contato. ' +
+      'V1 fez ré para a esquerda até sua traseira tocar a dianteira de V2. ' +
+      'Saída de sítio visível na margem superior da via, próxima à posição inicial de V1. ' +
+      'Ponto de contato: extremidade esquerda de V1 (traseira) x extremidade direita de V2 (dianteira).');
     setVal('observacoes',
-      'V2 estava completamente parado antes e durante o evento. Não houve desvio lateral de nenhum veículo. ' +
-      'Sentido do fluxo da via: esquerda para direita. V1 se deslocou no sentido contrário ao fluxo (ré).');
+      'IMPORTANTE: V2 está À ESQUERDA e V1 está À DIREITA na cena. ' +
+      'V1 se move para a ESQUERDA (ré). A seta de V1 deve apontar para a ESQUERDA. ' +
+      'Ambas as dianteiras apontam para a DIREITA. ' +
+      'V2 tem carroceria de madeira visível na traseira (lado esquerdo de V2). ' +
+      'V2 permaneceu imóvel o tempo todo.');
 
     // Mostra tab V1 como ativa e V2 visível
     trocarTab(0);
