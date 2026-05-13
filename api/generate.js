@@ -23,17 +23,21 @@ function buildFinalPrompt(caseData) {
 Gere uma imagem única em formato vertical 1024x1536.
 
 ESTILO OBRIGATÓRIO:
-Croqui técnico/pericial de sinistro veicular.
-Estilo: desenho técnico vetorial, limpo, plano, esquemático, ortográfico, sem textura fotográfica, sem realismo dramático.
-Todos os veículos devem ser vistos exatamente de cima — vê-se o TETO do veículo, não a lateral, não a frente, não o para-brisa.
-Não gerar perspectiva.
-Não gerar visão lateral.
-Não gerar visão diagonal.
-Não gerar isométrico.
-Não gerar foto realista.
-Não gerar render artístico.
-Não gerar cena cinematográfica.
-A imagem deve parecer planta baixa técnica, não ilustração.
+Croqui técnico/pericial de sinistro veicular. Estilo: ilustração técnica aérea semi-realista de alta qualidade.
+Características do estilo correto:
+- Veículos com proporções realistas e detalhes visíveis (teto, capô visto de cima, para-brisa de cima, sombras suaves e uniformes)
+- Superfície da via com textura realista vista de cima (asfalto, terra batida com marcas de pneu, faixas visíveis)
+- Iluminação aérea uniforme, sem sombras dramáticas
+- Parece fotografia de drone combinada com sobreposições técnicas — alta qualidade, nítida
+- NÃO é cartoon, não é line drawing, não é esquema vetorial simples
+- NÃO é render 3D artístico, não é cena cinematográfica, não é ilustração realista dramática
+
+CÂMERA — ABSOLUTO:
+Câmera posicionada exatamente acima, apontando 90° para baixo (nadir). Como Google Maps Satellite no zoom máximo.
+Você vê o TETO/CAPÔ SUPERIOR dos veículos — NUNCA a lateral, NUNCA a frente, NUNCA a traseira.
+Proibido: visão lateral, perfil, 3/4, isométrica, perspectiva inclinada de qualquer tipo.
+Todos os veículos devem ser vistos exatamente de cima em TODOS os quadros.
+Não gerar perspectiva. Não gerar visão diagonal. Não gerar isométrico.
 
 COMPOSIÇÃO OBRIGATÓRIA:
 3 quadros retangulares empilhados verticalmente, separados por linhas horizontais finas e nítidas.

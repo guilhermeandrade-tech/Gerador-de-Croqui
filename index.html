@@ -962,11 +962,19 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
     setVal('v1-danos',   'Dianteira direita e parte inferior');
 
     // Dinâmica
-    setVal('relato',         'V1 trafegava da esquerda para a direita. A roda dianteira direita caiu em um buraco na pista. Após parar, iniciou-se incêndio na dianteira direita do veículo.');
-    setVal('evento-inicial', 'Roda dianteira direita de V1 caiu no buraco');
+    setVal('relato',
+      'V1 trafegava da esquerda para a direita em linha reta, sem desvio. ' +
+      'A roda dianteira direita caiu dentro de um buraco existente na pista. ' +
+      'V1 parou abruptamente com a roda dianteira direita dentro do buraco, sem rotacionar. ' +
+      'Após imobilização, iniciou-se incêndio na dianteira direita do veículo.');
+    setVal('evento-inicial', 'Roda dianteira direita de V1 caiu dentro do buraco na pista');
     setSelectByText('lado-desvio', 'Não houve desvio');
+    setVal('movimento-apos',  'V1 parou sem rotacionar. Não houve desvio lateral. Veículo permanece alinhado horizontalmente.');
     setVal('elemento-atingido', 'Buraco na pista');
-    setVal('posicao-final',  'V1 parado com roda dianteira direita dentro do buraco. Incêndio ativo no capô dianteiro direito.');
+    setVal('posicao-final',
+      'FASE 1: buraco visível na via à frente de V1, na trajetória da roda dianteira direita. ' +
+      'FASE 2: roda dianteira direita de V1 está DENTRO do buraco — sobreposição visual obrigatória, buraco parcialmente sob a roda. V1 sem rotação. ' +
+      'FASE 3: V1 imobilizado, alinhado horizontalmente, roda dianteira direita dentro do buraco. Incêndio com chamas laranja/vermelhas GRANDES no capô dianteiro direito, visto de cima.');
 
     atualizar();
     window.scrollTo({ top: 0, behavior: 'smooth' });
