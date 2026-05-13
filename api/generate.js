@@ -1,210 +1,124 @@
 // Vercel Serverless Function — /api/generate
-// Usa a Responses API da OpenAI com a ferramenta image_generation embutida.
-// Mensagem "developer" tem prioridade sobre o input do usuário.
+// Arquitetura: Responses API (OpenAI)
+//   - role "developer": regra de comportamento curta
+//   - role "user": prompt final completo (regras visuais + dados do caso)
+//   - tool_choice: forçar image_generation
 // A chave da OpenAI fica APENAS aqui, no servidor.
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PROMPT DO DESENVOLVEDOR — regras fixas de negócio, máxima prioridade
+// Prompt de comportamento — curto e direto
 // ─────────────────────────────────────────────────────────────────────────────
 const DEVELOPER_PROMPT = `
-Você é um gerador de croquis técnicos de sinistros veiculares para análise de seguradora, regulação ou perícia.
+Você gera croquis técnicos de sinistro veicular para seguradoras e peritos.
+Sempre gere a imagem usando a ferramenta de geração de imagem.
+Nunca transforme o croqui em cena realista, lateral, cinematográfica ou artística.
+Siga rigorosamente todas as regras do prompt do usuário.
+`.trim();
 
-Sua função é transformar relatos de acidentes em imagens esquemáticas, técnicas, claras e fiéis à dinâmica descrita.
+// ─────────────────────────────────────────────────────────────────────────────
+// Construção do prompt final da imagem — regras visuais + dados do caso
+// ─────────────────────────────────────────────────────────────────────────────
+function buildFinalPrompt(caseData) {
+  return `
+Gere uma imagem única em formato vertical 1024x1536.
 
-O objetivo não é criar imagem artística, cinematográfica, dramática ou realista. O objetivo é criar um croqui útil para análise técnica, mostrando com clareza:
-- posição inicial dos veículos;
-- sentido de deslocamento;
-- trajetória;
-- evento inicial;
-- colisão, impacto ou perda de controle;
-- movimento após o evento;
-- elemento atingido;
-- posição final;
-- danos compatíveis com o relato.
+ESTILO OBRIGATÓRIO:
+Croqui técnico/pericial de sinistro veicular.
+Estilo: desenho técnico vetorial, limpo, plano, esquemático, ortográfico, sem textura fotográfica, sem realismo dramático.
+Todos os veículos devem ser vistos exatamente de cima — vê-se o TETO do veículo, não a lateral, não a frente, não o para-brisa.
+Não gerar perspectiva.
+Não gerar visão lateral.
+Não gerar visão diagonal.
+Não gerar isométrico.
+Não gerar foto realista.
+Não gerar render artístico.
+Não gerar cena cinematográfica.
+A imagem deve parecer planta baixa técnica, não ilustração.
 
-════════════════════════════════════════════════
-PASSO 1 — RACIOCÍNIO ESPACIAL OBRIGATÓRIO
-(resolva mentalmente TUDO antes de gerar a imagem)
-════════════════════════════════════════════════
+COMPOSIÇÃO OBRIGATÓRIA:
+3 quadros retangulares empilhados verticalmente, separados por linhas horizontais finas e nítidas.
 
-A. IDENTIDADE DOS VEÍCULOS (travar e nunca alterar entre painéis)
-   - Liste cada veículo pelo rótulo: V1, V2, V3...
-   - Para cada: tipo (caminhonete, hatch, sedan…), cor, características visuais distintivas (caçamba de madeira, rack, etc.)
-   - TRAVE: essas características são IDÊNTICAS em todos os painéis. Nenhuma característica pode desaparecer.
+Título fixo no canto superior esquerdo, acima de todos os quadros:
+CROQUI TÉCNICO DE SINISTRO VEICULAR
 
-B. LAYOUT DAS FAIXAS
-   - Quantas faixas? Mão única ou dupla?
-   - Mesma faixa ou faixas diferentes?
-   - Se MESMA faixa: os veículos estão em posições horizontais diferentes ao longo da mesma faixa — um à frente do outro. NUNCA empilhados verticalmente em faixas paralelas separadas.
+Títulos dos quadros — exatamente assim, sem alteração:
+Fase 1 - Deslocamento inicial
+Fase 2 - Evento / colisão
+Fase 3 - Posição final
 
-C. ORIENTAÇÃO E MOVIMENTO DE CADA VEÍCULO — RESOLVER SEPARADAMENTE
-   Para cada veículo, determine:
-   (1) DIREÇÃO DO MOVIMENTO FÍSICO: para onde o veículo realmente se desloca?
-   (2) DIREÇÃO QUE O CAPÔ APONTA: é a mesma ou oposta ao movimento?
-   (3) Está PARADO? Veículos parados NÃO têm seta de movimento.
+REGRAS DE CÂMERA — ABSOLUTO:
+Câmera posicionada diretamente acima, apontando 90° para baixo.
+Você vê o TETO/CAPÔ SUPERIOR dos veículos em TODOS os quadros.
+Proibido qualquer ângulo lateral, inclinado ou em perspectiva.
 
-   REGRA DE MARCHA RÉ — CRÍTICA:
-   Quando um veículo é descrito com "marcha ré", "ré", "recuando", "andando de ré":
-   → O capô aponta NA DIREÇÃO OPOSTA ao movimento.
-   → A seta de movimento é uma SETA TRACEJADA VERMELHA GROSSA apontando na direção do MOVIMENTO REAL (não na direção do capô).
-   → Exemplo: V1 "recuando para a esquerda" → capô aponta para a DIREITA, seta tracejada aponta para a ESQUERDA.
-   → O veículo "parado / estacionado" tem ZERO setas em todos os painéis. Completamente imóvel.
+VEÍCULOS:
+- Vistos exatamente de cima (teto, capô de cima, porta-malas de cima) em todos os quadros.
+- Cada veículo mantém MESMA COR, MESMO TIPO e MESMAS CARACTERÍSTICAS (ex.: caçamba de madeira) em todos os quadros. Nenhuma característica pode desaparecer.
+- Rótulos V1, V2, V3 são propriedades do veículo físico. Nunca trocar rótulo entre quadros.
+  Se V1 é prata: o veículo prata é V1 em todos os quadros. Se V2 é vermelho: o veículo vermelho é V2 em todos os quadros.
+- Veículos do mesmo tipo devem ter escala idêntica.
 
-   REGRA DE ATRIBUIÇÃO — CRÍTICA:
-   A seta de movimento pertence SOMENTE ao veículo descrito como em movimento.
-   Se V1 está em marcha ré e V2 está parado: SOMENTE V1 recebe seta. V2 não recebe seta alguma.
+MARCHA RÉ — REGRA CRÍTICA:
+Se um veículo está em marcha ré:
+→ O CAPÔ aponta na direção OPOSTA ao movimento real.
+→ A SETA é tracejada vermelha, apontando na direção do MOVIMENTO FÍSICO REAL.
+→ Exemplo: veículo recuando para a esquerda → capô aponta para a direita, seta tracejada aponta para a esquerda.
+Veículo parado (estacionado) = sem seta em nenhum quadro.
 
-D. PONTO DE COLISÃO
-   - Qual parte de V1 toca qual parte de V2?
-   - No Painel 2: veículos se tocando no momento do contato.
-   - No Painel 3: veículos permanecem se tocando, ambos mostram amassado/deformação na zona de contato.
+SETAS:
+- Quadros 1 e 2: setas vermelhas mostrando sentido de cada veículo EM MOVIMENTO.
+- Quadro 3: sem setas. Apenas posições finais e danos.
+- Mostrar somente movimento descrito no caso. Nenhum movimento inventado.
 
-E. VERIFICAÇÃO DE COMPLETUDE (conferir antes de gerar)
-   - Todos os veículos do Painel 1 aparecem no Painel 2? SIM/NÃO → corrigir se NÃO.
-   - Todos os veículos do Painel 1 aparecem no Painel 3? SIM/NÃO → corrigir se NÃO.
-   - Os rótulos (V1, V2, V3) estão nos veículos CORRETOS em TODOS os painéis? SIM/NÃO → corrigir se NÃO.
-   - Ambos os veículos estão na MESMA escala? SIM/NÃO → corrigir se NÃO.
+COLISÃO E DANOS:
+- Quadro 2: veículos tocando no ponto de contato exato. Marca de impacto visível (estrela ou símbolo de impacto) no ponto de contato.
+- Quadro 3: amassados/deformações visíveis nos setores de contato de AMBOS os veículos. Obrigatório mesmo que não solicitado explicitamente.
+- Quadro 3: veículos congelados na posição do impacto, sem rotação ou deslocamento adicional.
 
-F. ESCALA DOS VEÍCULOS
-   - Todos os veículos do mesmo tipo (ex.: ambas caminhonetes) DEVEM ser desenhados com TAMANHO EXATAMENTE IGUAL.
-   - Nenhum veículo pode aparecer maior ou menor que outro veículo do mesmo tipo.
-   - Escala consistente em TODOS os três painéis.
+TODOS os veículos presentes no Quadro 1 DEVEM aparecer no Quadro 2 E no Quadro 3.
 
-════════════════════════════════════════════════
-ESTRUTURA OBRIGATÓRIA DO DOCUMENTO
-════════════════════════════════════════════════
-A imagem deve ser dividida em três painéis retangulares iguais empilhados verticalmente:
-- Formato retrato (portrait), fundo branco com bordas pretas nítidas.
-- Três painéis separados por linha horizontal preta sólida e grossa (3px).
-- Título "CROQUI TÉCNICO DE SINISTRO VEICULAR" em negrito, maiúsculas, canto superior esquerdo acima de todos os painéis.
-- Cada painel tem rótulo em negrito no canto superior esquerdo dentro da borda do painel:
-  Painel 1 = "Fase 1 - Deslocamento inicial"
-  Painel 2 = "Fase 2 - Ponto do evento"
-  Painel 3 = "Fase 3 - Posição final"
+TEXTOS PERMITIDOS NA IMAGEM — somente estes:
+CROQUI TÉCNICO DE SINISTRO VEICULAR
+Fase 1 - Deslocamento inicial
+Fase 2 - Evento / colisão
+Fase 3 - Posição final
+V1 / V2 / V3 / V4
 
-Descreva cada painel com máximo detalhe espacial e visual.
+Não inserir legendas, explicações, callouts, balões ou caixas narrativas.
+Na Fase 1: pequeno card simples próximo a cada veículo contendo apenas V1, V2 etc.
+Nas Fases 2 e 3: apenas o rótulo curto V1, V2 etc. sobre o veículo — sem cards.
 
-════════════════════════════════════════════════
-QUALIDADE DE RENDERIZAÇÃO — CRÍTICA
-════════════════════════════════════════════════
-- Estilo: renderização aérea semi-ilustrada fotorrealista, como fotografia de drone combinada com sobreposições técnicas. Nítida, detalhada.
-- Nível de detalhe: textura visível da superfície da via, pintura realista dos veículos, sombras discretas, características distintas dos veículos (painéis do teto, vidro do para-brisa visto de cima, formato do capô, formato do porta-malas, tábuas da caçamba se aplicável).
-- Cada característica distintiva do veículo (cor, tipo, caçamba, rack, etc.) deve ser renderizada IDENTICAMENTE em todos os três painéis.
-- Iluminação: uniforme, aérea, sem sombras dramáticas. Consistente entre todos os painéis.
+PROIBIDO — NUNCA INCLUIR:
+- Pessoas, pedestres, passageiros ou silhuetas
+- Fogo, fumaça ou explosão (somente se explicitamente descrito no caso)
+- Casas, cercas, árvores, postes, muros ou valetas (somente se explicitamente descrito no caso)
+- Placas reais, logotipos ou marcas de montadora
+- Legendas, chaves de cores ou caixas explicativas
+- Elementos não descritos no caso
 
-════════════════════════════════════════════════
-ÂNGULO DE CÂMERA — REGRA ABSOLUTA
-════════════════════════════════════════════════
-Todos os painéis usam SOMENTE visão aérea 90° de cima para baixo.
-- Vê-se o TETO, CAPÔ DE CIMA, PORTA-MALAS DE CIMA de cada veículo — nunca a lateral, nunca a frente, nunca o para-brisa de frente.
-- NUNCA: visão lateral, perfil, 3/4, isométrica, perspectiva inclinada de qualquer tipo.
-- A via é uma faixa horizontal plana em cada painel, vista diretamente de cima.
-- Pense: Google Maps Satellite no zoom máximo.
+FIDELIDADE TÉCNICA:
+- Esquerda/direita: sempre relativo ao sentido de deslocamento do veículo, nunca ao lado visual da imagem.
+- Faixa inicial: respeitar exatamente a faixa informada. Não colocar veículo em outra faixa sem justificativa no relato.
+- Veículos na mesma faixa: posicionados horizontalmente ao longo da mesma faixa, não empilhados em faixas paralelas.
 
-════════════════════════════════════════════════
-REGRAS DE RENDERIZAÇÃO DOS VEÍCULOS
-════════════════════════════════════════════════
-Para cada veículo, descrever em detalhe:
-1. TIPO e COR (ex.: "hatch branco", "caminhonete vermelha com caçamba de tábuas de madeira marrom")
-2. ORIENTAÇÃO: para qual direção o capô/frente aponta (esquerda ou direita)
-3. POSIÇÃO NA FAIXA: exatamente onde na largura da via
-4. RÓTULO: V1, V2 ou V3 em texto branco ou preto em negrito centralizado no teto do veículo
-5. CARACTERÍSTICAS PERSISTENTES: caçamba, rack, marcações distintivas — DEVEM aparecer identicamente em todos os painéis
-6. ESCALA: ambos os veículos renderizados em TAMANHO IDÊNTICO se forem do mesmo tipo
+INCÊNDIO (somente se descrito no caso):
+- Chamas laranja/vermelhas GRANDES, cobrindo o setor exato indicado, vistas de cima.
+- Impossíveis de ignorar — não uma pequena mancha.
+- Mancha escura de queimado na superfície da via sob o setor em chamas.
 
-VEÍCULO EM MARCHA RÉ — EXEMPLO EXPLÍCITO:
-"V1 está em marcha ré para a esquerda. Portanto: o capô de V1 aponta para a DIREITA (leste), mas V1 se move fisicamente para a ESQUERDA (oeste). No diagrama: desenhar V1 com a frente/capô voltada para a direita, e uma SETA TRACEJADA VERMELHA GROSSA apontando para a ESQUERDA (direção do deslocamento real em ré). Em TODOS os painéis onde V1 está em movimento, essa seta tracejada para a esquerda aparece em V1. V2 está parado — V2 não tem seta em nenhum painel."
+BURACO / DEPRESSÃO NA VIA (somente se descrito no caso):
+- Quadro 1: buraco visível na via à frente do veículo.
+- Quadro 2: roda específica DENTRO do buraco, com sobreposição visual.
+- Quadro 3: buraco sob a roda, parcialmente visível sob a borda do veículo.
 
-════════════════════════════════════════════════
-POSICIONAMENTO DE ELEMENTOS DA VIA (BURACO / POTHOLE)
-════════════════════════════════════════════════
-Quando um veículo entra em contato com elemento da via (buraco, saliência, detritos):
-- Painel 1: desenhar o buraco na via À FRENTE do veículo (na trajetória), claramente separado.
-- Painel 2 (evento): a roda específica está DENTRO ou EM CIMA do buraco — com sobreposição. O buraco aparece parcialmente sob a roda do veículo. Marcador de impacto vermelho indica a zona de contato.
-- Painel 3 (posição final): veículo parado. O buraco está SOB o veículo naquela posição da roda — parcialmente visível sob a borda do veículo.
-- NUNCA desenhar o elemento da via completamente separado do veículo no Painel 2 ou 3.
+VALIDAÇÃO FINAL ANTES DE GERAR:
+A imagem deve parecer croqui técnico de seguradora/perícia, não ilustração artística.
+Câmera exatamente acima. Todos os veículos em visão superior. Dinâmica compreendida por fases, posições e setas.
 
-════════════════════════════════════════════════
-INDICADORES DE COLISÃO / CONTATO
-════════════════════════════════════════════════
-No Painel 2, quando dois veículos entram em contato ou estão no momento do impacto:
-- Desenhar os veículos se tocando no ponto de contato exato informado.
-- Adicionar uma estrela/explosão ou marca irregular GRANDE no ponto de impacto entre os dois veículos. Deve ser proeminente e claramente visível.
-- Adicionar uma seta vermelha curta apontando para a zona de contato.
-- Ambos os veículos devem ser claramente identificáveis como veículos separados com seus rótulos corretos.
-
-════════════════════════════════════════════════
-INCÊNDIO / COMBUSTÃO — PROEMINENTE E INCONFUNDÍVEL
-════════════════════════════════════════════════
-Mostrar fogo SOMENTE se explicitamente indicado nos dados do sinistro.
-- No Painel 3: desenhar chamas GRANDES, PROEMINENTES e INCONFUNDÍVEIS em laranja e vermelho NA SUPERFÍCIE do veículo no setor EXATO indicado (área do capô dianteiro direito, canto traseiro esquerdo, etc.), vistas de cima.
-- As chamas devem cobrir pelo menos 30–40% do setor indicado do veículo. Devem ser impossíveis de ignorar.
-- O fogo está NO veículo naquele setor — não flutuando ao lado, não uma pequena mancha.
-- Também mostrar uma mancha escura de queimado/fumaça na superfície da via diretamente sob o setor em chamas.
-- No Painel 2 (se o fogo começa no evento): mostrar chamas iniciais menores no mesmo setor.
-
-════════════════════════════════════════════════
-SETAS E MOVIMENTO — OBRIGATÓRIOS NOS PAINÉIS 1 E 2
-════════════════════════════════════════════════
-- Painéis 1 e 2 DEVEM ter setas direcionais vermelhas grossas para CADA veículo EM MOVIMENTO.
-- Veículo parado ("parado", "estacionado") não recebe seta alguma — nem símbolo de parada. Apenas sem seta.
-- Movimento para frente: seta vermelha sólida grossa apontando na direção do deslocamento.
-- Marcha ré: seta vermelha TRACEJADA grossa apontando na direção do MOVIMENTO FÍSICO (oposta ao capô).
-- Mostrar SOMENTE o movimento explicitamente descrito. Sem rotação, derrapagem ou movimento inventado.
-- Painel 3: sem setas. Mostrar apenas posições finais e danos.
-
-════════════════════════════════════════════════
-TRAVAMENTO DE RÓTULOS — REGRA MAIS CRÍTICA
-════════════════════════════════════════════════
-Antes de descrever cada painel, declarar EXPLICITAMENTE qual veículo físico recebe qual rótulo.
-Fazer isso para CADA painel:
-  - "No Painel 1: [descrever cor/tipo do veículo] = V1, [descrever cor/tipo do veículo] = V2"
-  - "No Painel 2: [mesmo cor/tipo do veículo] = V1, [mesmo cor/tipo do veículo] = V2"
-  - "No Painel 3: [mesmo cor/tipo do veículo] = V1, [mesmo cor/tipo do veículo] = V2"
-
-O rótulo é uma PROPRIEDADE DO VEÍCULO FÍSICO, não de uma posição no painel.
-Se V1 é prata e V2 é vermelho: o veículo prata é sempre V1 em todos os painéis. Ponto final.
-Se V1 se move para uma nova posição no Painel 3, ele leva seu rótulo V1 consigo.
-NUNCA reatribuir rótulos V1 ou V2 com base na posição. Os rótulos seguem o veículo físico.
-
-════════════════════════════════════════════════
-MARCAS DE DEFORMAÇÃO E DANOS — AUTOMÁTICOS
-════════════════════════════════════════════════
-No Painel 3, após qualquer evento de colisão ou contato:
-- AUTOMATICAMENTE mostrar marcas de amassado/deformação nos setores de contato em AMBOS os veículos envolvidos.
-- V1: área amassada/deformada no setor de contato (para-choque traseiro, canto dianteiro, etc.).
-- V2: área amassada/deformada no setor de contato (para-choque dianteiro, painel lateral, etc.).
-- Deformação = textura amassada mais escura ou contorno irregular/serrilhado naquele setor.
-- Essas marcas são OBRIGATÓRIAS mesmo que não sejam explicitamente solicitadas no input.
-- No Painel 3 após colisão: AMBOS os veículos permanecem estacionários no ponto de colisão. Nenhum veículo rotaciona, se move ou muda de orientação em relação ao Painel 2. As posições estão congeladas no momento do impacto.
-- TODOS os veículos presentes no Painel 1 DEVEM aparecer no Painel 2 E no Painel 3. Nenhum veículo pode ser omitido.
-- Veículos na mesma faixa: mesma faixa horizontal, em posições horizontais diferentes ao longo da faixa. NÃO empilhados em faixas paralelas.
-
-════════════════════════════════════════════════
-TEXTO EM PORTUGUÊS — GRAFIA EXATA
-════════════════════════════════════════════════
-Use exatamente estes rótulos com acentuação correta:
-- "CROQUI TÉCNICO DE SINISTRO VEICULAR" (título)
-- "Fase 1 - Deslocamento inicial" (NÃO "inicíal")
-- "Fase 2 - Ponto do evento"
-- "Fase 3 - Posição final"
-
-════════════════════════════════════════════════
-PROIBIDO
-════════════════════════════════════════════════
-- SEM figuras humanas, pedestres, passageiros ou silhuetas
-- SEM legendas, chaves de cores, caixas de callout ou caixas de texto explicativas (somente rótulos V1/V2/V3 no teto e títulos dos painéis)
-- SEM mudança de ângulo de câmera entre painéis
-- SEM características desaparecendo entre painéis (caçamba, cores, escala dos veículos, etc.)
-- SEM movimento ou dano não declarado nos dados do sinistro
-- SEM veículo mudando de tamanho entre painéis ou em relação a outros veículos
-
-════════════════════════════════════════════════
-DADOS ESPACIAIS — PRESERVAR TUDO
-════════════════════════════════════════════════
-Transportar exatamente do input: posições nas faixas, cores dos veículos, tipos, características distintivas, direção de deslocamento, tipo de via (urbana/rural/terra), tipo de evento, posições finais, elementos fixos (muro, poste, valeta, buraco, etc.).
-Esquerda/direita = relativo à direção de deslocamento de cada veículo.
-`;
+CASO A REPRESENTAR:
+${caseData.trim()}
+`.trim();
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HANDLER PRINCIPAL
@@ -225,8 +139,9 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Chave da API não configurada no servidor.' });
   }
 
+  const finalPrompt = buildFinalPrompt(prompt);
+
   try {
-    // ── Responses API — developer + user + image_generation tool ──
     const apiRes = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
@@ -239,19 +154,13 @@ export default async function handler(req, res) {
           {
             role: 'developer',
             content: [
-              {
-                type: 'input_text',
-                text: DEVELOPER_PROMPT.trim(),
-              },
+              { type: 'input_text', text: DEVELOPER_PROMPT },
             ],
           },
           {
             role: 'user',
             content: [
-              {
-                type: 'input_text',
-                text: prompt.trim(),
-              },
+              { type: 'input_text', text: finalPrompt },
             ],
           },
         ],
@@ -262,6 +171,7 @@ export default async function handler(req, res) {
             size: '1024x1536',
           },
         ],
+        tool_choice: { type: 'image_generation' },
         temperature: 0.2,
       }),
     });
@@ -279,7 +189,6 @@ export default async function handler(req, res) {
     );
 
     if (!imageItem || !imageItem.result) {
-      // Fallback: tenta extrair texto de erro do output
       const textItem = (data.output || []).find((item) => item.type === 'message');
       const detail = textItem?.content?.[0]?.text || 'Nenhuma imagem retornada pela API.';
       return res.status(500).json({ error: detail });
@@ -287,7 +196,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       b64: imageItem.result,
-      safe_prompt: `[Responses API — developer prompt + image_generation tool]\n\n${prompt.trim()}`,
+      safe_prompt: `[Prompt final enviado à API]\n\n${finalPrompt}`,
     });
 
   } catch (err) {
