@@ -116,7 +116,7 @@ Carry over ALL of the following from the input, exactly:
         prompt: safePrompt,
         n: 1,
         size: '1024x1536',   // retrato — ideal para 3 painéis empilhados verticalmente
-        quality: 'standard',
+        quality: 'high',     // máxima qualidade — mais lento, mais detalhado
       }),
     });
 
