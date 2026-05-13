@@ -716,13 +716,12 @@
       g('observacoes')       ? `Observações adicionais: ${vf(g('observacoes'))}` : '',
     ].filter(Boolean).join('\n');
 
-    return `DIAGRAMA TÉCNICO DE ENGENHARIA DE TRÁFEGO — DOCUMENTAÇÃO DE SINISTRO VEICULAR
+    return `CROQUI TÉCNICO DE SINISTRO VEICULAR
 
-FORMATO: Imagem vertical (retrato). Três painéis retangulares separados empilhados verticalmente, divididos por linhas horizontais pretas grossas. Cada painel tem seu rótulo no canto superior esquerdo em texto pequeno e negrito.
+FORMATO: Imagem vertical (retrato). Três painéis retangulares empilhados verticalmente, divididos por linhas horizontais pretas grossas. Título "CROQUI TÉCNICO DE SINISTRO VEICULAR" no canto superior esquerdo acima de todos os painéis.
 - Painel superior: "Fase 1 - Deslocamento inicial"
 - Painel central: "Fase 2 - Ponto do evento"
 - Painel inferior: "Fase 3 - Posição final"
-Título "CROQUI TÉCNICO DE SINISTRO VEICULAR" no canto superior esquerdo acima de todos os painéis.
 
 ÂNGULO DE CÂMERA OBRIGATÓRIO — VISÃO AÉREA PURA:
 Câmera posicionada diretamente acima apontando 90° para baixo. Como satélite ou helicóptero olhando reto para baixo.
@@ -1014,10 +1013,11 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
     setSelectByText('v2-modelo', 'Caminhonete');
     setVal('v2-cor',     'Vermelho');
     setVal('v2-sentido',
-      'PARADO. Dianteira de V2 aponta para a DIREITA (no sentido do fluxo). ' +
-      'V2 está À ESQUERDA de V1 na cena. V2 tem carroceria de madeira na traseira.');
+      'PARADO em todos os painéis. Dianteira de V2 aponta para a DIREITA. ' +
+      'V2 está À ESQUERDA de V1 na cena. ' +
+      'OBRIGATÓRIO em todos os painéis: V2 tem caçamba/carroceria com tábuas de madeira marrom na traseira (lado esquerdo do veículo).');
     setVal('v2-faixa',   'Faixa única — lado esquerdo da cena, à esquerda de V1');
-    setVal('v2-danos',   'Dianteira (lado direito do veículo, pois a dianteira aponta para a direita)');
+    setVal('v2-danos',   'Dianteira (extremidade direita de V2)');
 
     // Dinâmica
     setVal('relato',
@@ -1042,11 +1042,12 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
       'Saída de sítio visível na margem superior da via, próxima à posição inicial de V1. ' +
       'Ponto de contato: extremidade esquerda de V1 (traseira) x extremidade direita de V2 (dianteira).');
     setVal('observacoes',
-      'IMPORTANTE: V2 está À ESQUERDA e V1 está À DIREITA na cena. ' +
-      'V1 se move para a ESQUERDA (ré). A seta de V1 deve apontar para a ESQUERDA. ' +
-      'Ambas as dianteiras apontam para a DIREITA. ' +
-      'V2 tem carroceria de madeira visível na traseira (lado esquerdo de V2). ' +
-      'V2 permaneceu imóvel o tempo todo.');
+      'POSIÇÕES NA CENA (obrigatório): V2 (vermelho) está À ESQUERDA. V1 (prata) está À DIREITA. ' +
+      'MOVIMENTO: V1 faz ré para a ESQUERDA — a seta de movimento de V1 aponta para a ESQUERDA. ' +
+      'A dianteira (capô) de V1 aponta para a DIREITA. ' +
+      'CAÇAMBA: V2 DEVE ter caçamba com tábuas de madeira marrom visível em TODOS os três painéis, sem exceção. ' +
+      'COLISÃO: na Fase 2, mostrar marca de impacto/estrela no ponto de contato entre traseira de V1 e dianteira de V2. ' +
+      'V2 permaneceu imóvel em todos os painéis.');
 
     // Mostra tab V1 como ativa e V2 visível
     trocarTab(0);

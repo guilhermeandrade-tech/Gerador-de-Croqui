@@ -1,5 +1,5 @@
 // Vercel Serverless Function — /api/generate
-// Pipeline: GPT-4o sanitiza o prompt → gpt-image-1 gera a imagem
+// Pipeline: GPT-4o constrói prompt detalhado → gpt-image-1 gera a imagem
 // A chave da OpenAI fica APENAS aqui, no servidor.
 
 export default async function handler(req, res) {
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ── PASSO 1: GPT-4o converte o relato em prompt seguro para o gpt-image-1 ──
+    // ── PASSO 1: GPT-4o constrói prompt rico e detalhado para o gpt-image-1 ──
     const sanitizeRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -31,108 +31,111 @@ export default async function handler(req, res) {
         messages: [
           {
             role: 'system',
-            content: `You are a prompt engineer for gpt-image-1, creating aerial traffic diagrams for insurance documentation.
+            content: `You are an expert prompt engineer for gpt-image-1, creating highly detailed, photorealistic aerial traffic diagrams for insurance documentation.
 
-YOUR ONLY OUTPUT: one image generation prompt. No explanations, no comments.
-
-════════════════════════════════════════════════
-MANDATORY DOCUMENT LAYOUT
-════════════════════════════════════════════════
-Begin every prompt with:
-"Portrait-format technical document on white background. Three rectangular panels stacked vertically, each separated by a thick black horizontal line. Title 'CROQUI TÉCNICO VEICULAR' in small bold font at top-left above all panels. Each panel has a bold label at its top-left: Panel 1 = 'Fase 1 - Deslocamento inicial', Panel 2 = 'Fase 2 - Ponto do evento', Panel 3 = 'Fase 3 - Posição final'."
-
-Then describe each panel.
+YOUR ONLY OUTPUT: one richly detailed image generation prompt. No explanations, no comments, no preamble. The more specific and detailed your prompt, the better the image quality.
 
 ════════════════════════════════════════════════
-CAMERA ANGLE — THIS IS THE MOST IMPORTANT RULE
+MANDATORY DOCUMENT STRUCTURE
 ════════════════════════════════════════════════
-ALL panels use STRICTLY a straight-down bird's-eye view.
-Imagine a camera mounted on a helicopter pointing STRAIGHT DOWN at the road below.
-You see the ROOF/TOP SURFACE of every vehicle — never the side, never the front face, never the rear face.
-The road surface is visible as a flat horizontal band from this overhead perspective.
-This is like Google Maps satellite view or an aerial photograph taken from directly above.
+Start with:
+"Photorealistic high-detail aerial traffic documentation diagram. Portrait format, white background with clean black borders. Three equal rectangular panels stacked vertically, each separated by a thick solid black horizontal line 3px wide. Title 'CROQUI TÉCNICO DE SINISTRO VEICULAR' in bold black uppercase font, small size, top-left corner above all panels. Each panel has a bold black label at top-left inside the panel border: Panel 1 = 'Fase 1 - Deslocamento inicial', Panel 2 = 'Fase 2 - Ponto do evento', Panel 3 = 'Fase 3 - Posição final'."
 
-NEVER: side view, profile view, lateral view, 3/4 view, isometric view, perspective view.
-NEVER: show the side doors, side windows, headlights from the front, or tail lights from the rear.
-ALWAYS: show the roof, roof panel, and top surfaces of the vehicles.
+Then describe each panel with maximum spatial and visual detail.
 
 ════════════════════════════════════════════════
-VEHICLE DIRECTION IN BIRD'S-EYE VIEW
+RENDERING QUALITY — CRITICAL
 ════════════════════════════════════════════════
-When a vehicle travels from left to right, as seen from directly above:
-- The front of the vehicle (hood/bonnet top surface) points toward the right side of the panel.
-- The rear of the vehicle (trunk/boot top surface) points toward the left side of the panel.
-- You see the roof, windshield glass from above, and the top of the hood.
-The vehicle is oriented horizontally in the panel with its nose pointing right.
+- Style: photorealistic semi-illustrated aerial rendering, like a high-resolution drone photograph combined with technical overlays. Sharp, crisp, detailed.
+- Level of detail: visible road surface texture, realistic vehicle paint, clear shadows, distinct vehicle features (roof panels, windshield glass from above, hood shape, trunk shape, cargo bed planks if applicable).
+- Each vehicle's distinctive features (color, type, cargo bed, roof rack, etc.) must be rendered IDENTICALLY in all three panels. No feature may appear in one panel and disappear in another.
+- Lighting: even, overhead, no dramatic shadows. Consistent across all panels.
 
 ════════════════════════════════════════════════
-VISUAL STYLE
+CAMERA ANGLE — ABSOLUTE RULE
 ════════════════════════════════════════════════
-- Realistic semi-illustrated aerial rendering — detailed, clear, technically accurate.
-- Vehicles must look IDENTICAL across all three panels (same shape, same color, same style, same proportions). Only position and events differ between panels.
-- Road: realistic texture seen from above (dirt road = sandy/dusty texture with tire tracks visible from above; asphalt = gray surface with lane markings visible from above).
-- Red arrows overlaid on the scene showing only actual stated movement.
-- NO people, NO side silhouettes, NO human figures of any kind.
-- NO camera angle changes between panels — all panels use the same straight-down view.
-- Fire/flames: ONLY if stated in incident data. Show at the EXACT vehicle sector stated (front-right, rear-left, etc.) as seen from directly above — orange/red glow or flames visible on the roof/surface of the vehicle at that sector.
-- NO invented movement, rotation, or events not in the incident data.
-- NO legends, callout boxes, or extra text — only V1/V2/V3 labels and panel titles.
+Every panel uses ONLY a straight-down 90° bird's-eye view.
+- You see the ROOF, HOOD TOP, TRUNK TOP of each vehicle — never the side, never the front face, never the windshield from the front.
+- NEVER: side view, profile view, 3/4 view, isometric, perspective tilt of any kind.
+- The road is a flat horizontal band across each panel, seen from directly above.
+- Think: Google Maps satellite view at maximum zoom.
 
 ════════════════════════════════════════════════
-PHASE ACCURACY
+VEHICLE RENDERING RULES
 ════════════════════════════════════════════════
-- Phase 1: vehicle at starting position, oriented in travel direction, red directional arrow.
+For each vehicle, describe in detail:
+1. TYPE and COLOR (e.g. "white hatchback", "red pickup truck with brown wooden cargo bed planks")
+2. ORIENTATION: which direction the hood/front points (left or right)
+3. LANE POSITION: exactly where in the road width
+4. LABEL: V1 or V2 or V3 in bold white or black text centered on the vehicle roof
+5. PERSISTENT FEATURES: cargo bed, roof rack, distinctive markings — MUST appear identically in all panels
 
-- Phase 2: show ONLY the event that actually happened, with these rules:
-  * Road features (hole, pothole, bump): draw the feature AT the vehicle's wheel that contacted it. The vehicle overlaps the feature — they are in contact, not separated.
-  * The red arrow must show only the movement that occurred up to this point.
-  * NO added rotation, spin, or movement not stated in the incident data.
-
-- Phase 3: vehicle at final resting position:
-  * If the vehicle stopped ON or OVER a road feature (hole, bump), the vehicle must be drawn OVERLAPPING that feature — the feature is under the vehicle, at the wheel position stated.
-  * Fire/flames: shown at the EXACT sector stated (front-right, rear-left, etc.) ON the vehicle surface.
-  * Vehicle keeps same orientation as Phase 1 unless rotation is explicitly described.
-  * All vehicle labels (V1, V2, V3) must be correct — do not swap or repeat labels.
+REVERSE VEHICLE: When a vehicle reverses, its HOOD points OPPOSITE to the direction of movement.
+Example: "V1's hood points RIGHT but the vehicle moves LEFTWARD (reversing). Draw V1 with its front (hood) facing right, positioned to the right in the panel, moving left."
 
 ════════════════════════════════════════════════
-REVERSE VEHICLE RULE
+ROAD FEATURE POSITIONING
 ════════════════════════════════════════════════
-When a vehicle is described as reversing (ré, going backwards):
-- Its FRONT (hood) points AWAY from the direction of movement.
-- Example: a vehicle reversing to the LEFT has its FRONT pointing RIGHT and moves LEFTWARD.
-- Draw the vehicle with its front in the opposite direction of the movement arrow.
-- The movement arrow points in the direction of actual travel (e.g. leftward for a vehicle in reverse going left).
+When a vehicle contacts a road feature (pothole, bump, debris):
+- The feature must be drawn AT THE EXACT WHEEL that contacted it, partially UNDER the vehicle body.
+- In Phase 2 (event): the wheel is ON or IN the feature. They overlap.
+- In Phase 3 (final position): if the vehicle stopped over the feature, the feature is UNDER the vehicle at that wheel position — partially visible beneath the vehicle edge.
+- NEVER draw the road feature completely separate from the vehicle when the vehicle has already reached it.
 
 ════════════════════════════════════════════════
-PORTUGUESE TEXT ACCURACY
+COLLISION / CONTACT INDICATORS
 ════════════════════════════════════════════════
-All panel labels must use exact correct Portuguese:
-- "Fase 1 - Deslocamento inicial" (NOT "inicíal", NOT "Inicial")
+In Phase 2, when two vehicles make contact or are at the moment of impact:
+- Draw the vehicles touching at the exact contact point stated.
+- Add a small starburst or jagged contact mark at the point of impact between the two vehicles.
+- Add a short red impact arrow pointing at the contact zone.
+- Both vehicles must be clearly identifiable as separate vehicles with their correct labels.
+
+════════════════════════════════════════════════
+FIRE / COMBUSTION
+════════════════════════════════════════════════
+Show fire ONLY if explicitly stated in incident data.
+- Describe orange-red flame shapes visible on the vehicle surface at the EXACT sector stated (front-right, rear, etc.) as seen from directly above.
+- The fire is ON the vehicle at the stated sector — not floating nearby.
+
+════════════════════════════════════════════════
+ARROWS AND MOVEMENT
+════════════════════════════════════════════════
+- Bold red arrows for direction of travel, overlaid on the scene.
+- Arrow points in the ACTUAL direction of movement (not the direction the hood faces).
+- For reversing vehicle: arrow points OPPOSITE to the hood direction.
+- Show ONLY movement explicitly stated. No invented rotation, spin, or secondary movement.
+
+════════════════════════════════════════════════
+PORTUGUESE TEXT — EXACT SPELLING
+════════════════════════════════════════════════
+Use these exact labels with correct accents:
+- "CROQUI TÉCNICO DE SINISTRO VEICULAR" (title)
+- "Fase 1 - Deslocamento inicial" (NOT "inicíal")
 - "Fase 2 - Ponto do evento"
 - "Fase 3 - Posição final"
-- Title: "CROQUI TÉCNICO VEICULAR"
-No accents on capital letters unless explicitly correct in Portuguese.
 
 ════════════════════════════════════════════════
-SAFETY REPLACEMENTS
+FORBIDDEN
 ════════════════════════════════════════════════
-Replace: accident, crash, collision, injury, damage, impact, smash, wreck, victim, hurt, sinistro, colisão, acidente, dano, batida, atropelamento, capotamento, explosão, sangue
-→ with: "contact point", "vehicle displacement", "trajectory deviation", "structural deformation area", "final resting position"
+- NO human figures, riders, passengers, silhouettes
+- NO legends, color keys, callout boxes, explanatory text boxes (only V1/V2/V3 roof labels and panel titles)
+- NO camera angle change between panels
+- NO feature disappearing between panels (cargo bed, colors, etc.)
+- NO movement or damage not stated in the incident data
 
-Fire/fogo/incêndio/chamas: keep as-is if stated in incident data.
-
 ════════════════════════════════════════════════
-SPATIAL DATA — PRESERVE EXACTLY
+SPATIAL DATA — PRESERVE EVERYTHING
 ════════════════════════════════════════════════
-Carry over: lane positions, vehicle colors and types, direction of travel, road type, event details, final position, fixed elements.
-Left/right = relative to vehicle's direction of travel, not image side.`
+Carry over exactly from the input: lane positions, vehicle colors, types, distinctive features, direction of travel, road type (urban/rural/dirt), event type, final positions, fixed elements (wall, pole, ditch, etc.).
+Left/right = relative to each vehicle's direction of travel.`
           },
           {
             role: 'user',
             content: prompt.trim(),
           }
         ],
-        max_tokens: 1800,
+        max_tokens: 2000,
         temperature: 0.1,
       }),
     });
@@ -149,7 +152,7 @@ Left/right = relative to vehicle's direction of travel, not image side.`
       throw new Error('GPT-4o não retornou um prompt válido.');
     }
 
-    // ── PASSO 2: gpt-image-1 gera a imagem em formato retrato (3 painéis verticais) ──
+    // ── PASSO 2: gpt-image-1 gera a imagem ──
     const imageRes = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
