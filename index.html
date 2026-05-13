@@ -943,45 +943,32 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
   function preencherTeste() {
     if (modoManual) resetarPrompt();
 
+    // Limpa campos não usados
+    setVal('detalhe-posicao', '');
+    setVal('observacoes', '');
+    setVal('movimento-apos', '');
+
     // Via
     setSelectByText('tipo-via',   'Estrada de terra');
     setSelectByText('config-via', 'Mão única');
-    setVal('sentido-via',  'Esquerda para Direita (Oeste → Leste). A via corre horizontalmente nos painéis.');
-    setVal('qtd-faixas',   '1');
+    setVal('sentido-via',  'Da esquerda para a direita');
+    setVal('qtd-faixas',   '1 faixa');
 
     // V1 — Hatch branco
     setSelectByText('v1-modelo', 'Hatch');
     setVal('v1-cor',     'Branco');
-    setVal('v1-sentido', 'Da esquerda para a direita (Oeste → Leste)');
-    setVal('v1-faixa',   'Faixa única, centro da via');
-    setVal('v1-danos',   'Dianteira direita (roda dianteira direita atingiu o buraco) e parte inferior');
+    setVal('v1-sentido', 'Da esquerda para a direita');
+    setVal('v1-faixa',   'Faixa única');
+    setVal('v1-danos',   'Dianteira direita e parte inferior');
 
     // Dinâmica
-    setVal('relato',
-      'Veículo hatch branco trafegava em linha reta pela faixa única de uma estrada de terra, ' +
-      'deslocando-se da esquerda para a direita. A roda dianteira direita do veículo caiu em um buraco ' +
-      'existente na pista. O veículo parou com a roda dianteira direita dentro do buraco, sem rotacionar. ' +
-      'Após imobilização, iniciou-se um incêndio na parte dianteira direita do veículo, que se alastrou.');
-    setVal('evento-inicial',  'Roda dianteira direita de V1 caiu dentro do buraco na pista');
+    setVal('relato',         'V1 trafegava da esquerda para a direita. A roda dianteira direita caiu em um buraco na pista. Após parar, iniciou-se incêndio na dianteira direita do veículo.');
+    setVal('evento-inicial', 'Roda dianteira direita de V1 caiu no buraco');
     setSelectByText('lado-desvio', 'Não houve desvio');
-    setVal('movimento-apos',  'Veículo desacelerou abruptamente e parou com a roda dianteira direita dentro do buraco');
     setVal('elemento-atingido', 'Buraco na pista');
-    setVal('posicao-final',   'V1 parado com roda dianteira direita dentro do buraco. Incêndio ativo e visível no capô dianteiro direito.');
-    setVal('detalhe-posicao',
-      'Fase 1: V1 se deslocando da esquerda para a direita com seta vermelha apontando para a direita. ' +
-      'Fase 2: roda dianteira direita de V1 está dentro do buraco — o buraco aparece SOB a roda dianteira direita, com sobreposição visual. Seta vermelha indica onde ocorreu o impacto. ' +
-      'Fase 3: V1 imobilizado. O buraco está visível SOB a roda dianteira direita do veículo (parcialmente oculto pelo veículo). ' +
-      'INCÊNDIO OBRIGATÓRIO na Fase 3: chamas laranja-vermelhas GRANDES e visíveis cobrindo o setor do capô dianteiro direito do veículo, vistas de cima. ' +
-      'O incêndio deve ser proeminente e inconfundível, não apenas uma pequena mancha.');
-    setVal('observacoes',
-      'OBRIGATÓRIO Fase 3: mostrar chamas grandes e visíveis (laranja e vermelho) no capô dianteiro direito do veículo. ' +
-      'O buraco deve estar sob a roda dianteira direita nas Fases 2 e 3. ' +
-      'Seta vermelha obrigatória na Fase 1 indicando sentido de deslocamento (esquerda → direita). ' +
-      'Não houve rotação do veículo.');
+    setVal('posicao-final',  'V1 parado com roda dianteira direita dentro do buraco. Incêndio ativo no capô dianteiro direito.');
 
     atualizar();
-
-    // Scroll suave até o topo do formulário
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -989,10 +976,13 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
   function preencherTesteColisao() {
     if (modoManual) resetarPrompt();
 
+    // Limpa campos não usados
+    setVal('detalhe-posicao', '');
+    setVal('observacoes', '');
+
     // Garante que V2 está visível
     document.getElementById('painel-v2').style.display = '';
     document.getElementById('painel-v2').classList.add('active');
-    // Ativa tab V2
     const tabs = document.querySelectorAll('.veiculo-tab');
     if (tabs[1]) tabs[1].classList.add('active');
 
@@ -1000,37 +990,31 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
     setSelectByText('tipo-via',   'Via urbana asfaltada');
     setSelectByText('config-via', 'Mão única');
     setVal('sentido-via',  'Da esquerda para a direita');
-    setVal('qtd-faixas',   '1');
+    setVal('qtd-faixas',   '1 faixa');
 
-    // V1 — Caminhonete prata (faz ré)
+    // V1 — Caminhonete prata (faz ré para a esquerda)
     setSelectByText('v1-modelo', 'Caminhonete');
     setVal('v1-cor',     'Prata');
-    setVal('v1-sentido', 'Marcha ré (recuando para a esquerda)');
+    setVal('v1-sentido', 'MARCHA RÉ — V1 move-se para a ESQUERDA. Capô aponta para a DIREITA. Seta tracejada vermelha aponta para a ESQUERDA.');
     setVal('v1-faixa',   'Faixa única');
     setVal('v1-danos',   'Traseira');
 
-    // V2 — Caminhonete vermelha com caçamba de madeira (parado)
+    // V2 — Caminhonete vermelha com caçamba de madeira (parado, à esquerda de V1)
     setSelectByText('v2-modelo', 'Caminhonete');
     setVal('v2-cor',     'Vermelho');
-    setVal('v2-sentido', 'Parado para entrega');
-    setVal('v2-faixa',   'Faixa única, à frente de V1 (V2 está à esquerda de V1 na via)');
+    setVal('v2-sentido', 'PARADO — sem seta, sem movimento');
+    setVal('v2-faixa',   'Faixa única, à esquerda de V1');
     setVal('v2-danos',   'Dianteira');
 
     // Dinâmica
-    setVal('relato',
-      'V2 estava estacionado na faixa para entrega, com caçamba de madeira. ' +
-      'V1 estava parado à frente de V2 na mesma faixa, próximo a uma saída lateral (saída de sítio). ' +
-      'V1 engajou marcha ré e recuou em linha reta até a traseira de V1 colidir com a dianteira de V2. ' +
-      'V2 permaneceu parado durante todo o evento.');
-    setVal('evento-inicial',  'V1 engajou marcha ré');
+    setVal('relato',         'V1 (prata) fez marcha ré para a esquerda e colidiu com V2 (vermelho com caçamba de madeira) que estava parado na mesma faixa, à esquerda de V1. Traseira de V1 bateu na dianteira de V2.');
+    setVal('evento-inicial', 'Marcha ré de V1 — apenas V1 se move, V2 está parado');
     setSelectByText('lado-desvio', 'Não houve desvio');
-    setVal('movimento-apos',  'V1 recuou em linha reta até colidir com a dianteira de V2');
+    setVal('movimento-apos',  'V1 continuou recuando até a traseira encostar na dianteira de V2');
     setVal('elemento-atingido', 'Dianteira de V2');
-    setVal('posicao-final',   'Traseira de V1 em contato com a dianteira de V2, ambos na faixa única');
-    setVal('detalhe-posicao', 'Saída lateral (saída de sítio) visível na margem superior da via, próxima à posição inicial de V1. V2 tem caçamba com tábuas de madeira.');
-    setVal('observacoes',     'V2 tem caçamba com tábuas de madeira visível em todos os painéis.');
+    setVal('posicao-final',  'Traseira de V1 encostada na dianteira de V2. V2 mantém caçamba com tábuas de madeira visível em todos os painéis.');
 
-    // Mostra tab V1 como ativa e V2 visível
+    // Mostra tab V1 como ativa
     trocarTab(0);
     atualizar();
     window.scrollTo({ top: 0, behavior: 'smooth' });
