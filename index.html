@@ -972,9 +972,10 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
     setVal('movimento-apos',  'V1 parou sem rotacionar. Não houve desvio lateral. Veículo permanece alinhado horizontalmente.');
     setVal('elemento-atingido', 'Buraco na pista');
     setVal('posicao-final',
-      'FASE 1: buraco visível na via à frente de V1, na trajetória da roda dianteira direita. ' +
-      'FASE 2: roda dianteira direita de V1 está DENTRO do buraco — sobreposição visual obrigatória, buraco parcialmente sob a roda. V1 sem rotação. ' +
-      'FASE 3: V1 imobilizado, alinhado horizontalmente, roda dianteira direita dentro do buraco. Incêndio com chamas laranja/vermelhas GRANDES no capô dianteiro direito, visto de cima.');
+      'FASE 1: V1 no lado ESQUERDO do quadro, capô apontando para a DIREITA, seta vermelha apontando para a DIREITA. ' +
+      'Buraco escuro visível na via à DIREITA de V1, na trajetória da roda dianteira DIREITA do veículo (lado inferior do veículo visto de cima). ' +
+      'FASE 2: V1 avançou para a direita. A roda dianteira DIREITA (canto inferior direito do veículo) está DENTRO do buraco — sobreposição visual: buraco parcialmente sob a roda, terra deslocada ao redor. V1 alinhado horizontalmente, sem rotação. Seta vermelha para a direita. ' +
+      'FASE 3: V1 imobilizado, alinhado horizontalmente (sem rotação). Buraco parcialmente visível sob a roda dianteira direita. Chamas laranja e vermelhas GRANDES e visíveis saindo do capô dianteiro direito do veículo, vistas de cima. Fumaça preta opcional.');
 
     atualizar();
     window.scrollTo({ top: 0, behavior: 'smooth' });
