@@ -879,11 +879,17 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || `Erro HTTP ${res.status}`);
 
-      document.getElementById('imagem-gerada').src  = data.url;
-      document.getElementById('btn-download').href  = data.url;
+      // gpt-image-1 retorna base64; fallback para url (dall-e-3 legado)
+      const imgSrc = data.b64
+        ? `data:image/png;base64,${data.b64}`
+        : data.url;
+
+      document.getElementById('imagem-gerada').src = imgSrc;
+      document.getElementById('btn-download').href = imgSrc;
+      document.getElementById('btn-download').download = 'croqui-tecnico.png';
       document.getElementById('prompt-debug-texto').textContent =
         data.safe_prompt
-          ? `── Prompt enviado (você viu destacado) ──\n${prompt}\n\n── Reescrito pelo GPT-4o → DALL-E 3 ──\n${data.safe_prompt}`
+          ? `── Prompt enviado (você viu destacado) ──\n${prompt}\n\n── Reescrito pelo GPT-4o → gpt-image-1 ──\n${data.safe_prompt}`
           : prompt;
 
       resultado.classList.add('visible');

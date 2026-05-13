@@ -104,7 +104,7 @@ Carry over ALL of the following from the input, exactly:
       throw new Error('GPT-4o não retornou um prompt válido.');
     }
 
-    // ── PASSO 2: DALL-E 3 gera a imagem em formato retrato (3 painéis verticais) ──
+    // ── PASSO 2: gpt-image-1 gera a imagem em formato retrato (3 painéis verticais) ──
     const imageRes = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
@@ -112,12 +112,11 @@ Carry over ALL of the following from the input, exactly:
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'dall-e-3',
+        model: 'gpt-image-1',
         prompt: safePrompt,
         n: 1,
-        size: '1024x1792',   // retrato — ideal para 3 painéis empilhados verticalmente
+        size: '1024x1536',   // retrato — ideal para 3 painéis empilhados verticalmente
         quality: 'standard',
-        response_format: 'url',
       }),
     });
 
@@ -128,8 +127,11 @@ Carry over ALL of the following from the input, exactly:
       return res.status(imageRes.status).json({ error: msg });
     }
 
+    // gpt-image-1 retorna base64 (não URL)
+    const b64 = imageData.data[0].b64_json;
+
     return res.status(200).json({
-      url: imageData.data[0].url,
+      b64,
       safe_prompt: safePrompt,
     });
 
