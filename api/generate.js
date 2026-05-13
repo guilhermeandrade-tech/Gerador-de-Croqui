@@ -95,16 +95,30 @@ In Phase 2, when two vehicles make contact or are at the moment of impact:
 FIRE / COMBUSTION
 ════════════════════════════════════════════════
 Show fire ONLY if explicitly stated in incident data.
-- Describe orange-red flame shapes visible on the vehicle surface at the EXACT sector stated (front-right, rear, etc.) as seen from directly above.
-- The fire is ON the vehicle at the stated sector — not floating nearby.
+- In Phase 3, describe realistic orange and red flame shapes clearly visible ON the vehicle surface at the EXACT sector stated (e.g. "front-right hood area", "rear-left corner"), as seen from directly above.
+- The flames must be prominently visible, covering the stated sector of the vehicle surface — large enough to be unmistakable, not a tiny hint.
+- The fire is ON the vehicle at that sector. Not floating beside it.
+- Also show a dark scorch mark on the road surface under the burning sector.
 
 ════════════════════════════════════════════════
-ARROWS AND MOVEMENT
+ARROWS AND MOVEMENT — REQUIRED IN EVERY PHASE
 ════════════════════════════════════════════════
-- Bold red arrows for direction of travel, overlaid on the scene.
+- Phases 1 and 2 MUST have bold red directional arrows showing each vehicle's movement or stationary state.
+- A stationary vehicle gets a small "stationary" indicator (e.g. crossed arrows or "P" symbol) or no arrow.
 - Arrow points in the ACTUAL direction of movement (not the direction the hood faces).
-- For reversing vehicle: arrow points OPPOSITE to the hood direction.
-- Show ONLY movement explicitly stated. No invented rotation, spin, or secondary movement.
+- For reversing vehicle: bold red dashed arrow pointing OPPOSITE to the hood direction (showing reverse travel direction).
+- Show ONLY movement explicitly stated. No invented rotation or secondary movement.
+- Phase 3: no arrows needed, but show final positions clearly.
+
+════════════════════════════════════════════════
+DEFORMATION AND DAMAGE MARKS
+════════════════════════════════════════════════
+In Phase 3 (final position), when two vehicles have made contact:
+- Show visible crumple/deformation marks at the contact point on BOTH vehicles.
+- V1: show crumpled/dented area at its contact sector (e.g. dented rear panel, crumpled corner).
+- V2: show crumpled/dented area at its contact sector (e.g. dented front bumper/hood).
+- Deformation is visible as darker crumpled texture or irregular outline at that vehicle sector.
+- Keep the correct label (V1, V2, V3) on each vehicle in ALL phases without exception — never swap labels between panels.
 
 ════════════════════════════════════════════════
 PORTUGUESE TEXT — EXACT SPELLING

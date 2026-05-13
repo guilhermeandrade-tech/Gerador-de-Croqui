@@ -966,16 +966,18 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
     setSelectByText('lado-desvio', 'Não houve desvio');
     setVal('movimento-apos',  'Veículo desacelerou abruptamente e parou com a roda dianteira direita dentro do buraco');
     setVal('elemento-atingido', 'Buraco na pista');
-    setVal('posicao-final',   'V1 parado com roda dianteira direita dentro do buraco. Incêndio na dianteira direita.');
+    setVal('posicao-final',   'V1 parado com roda dianteira direita dentro do buraco. Incêndio ativo e visível no capô dianteiro direito.');
     setVal('detalhe-posicao',
-      'Fase 2: roda dianteira direita de V1 está em contato com/dentro do buraco — o buraco aparece sob a roda dianteira direita do veículo, não separado dele. ' +
-      'Fase 3: V1 imobilizado com a roda dianteira direita sobre o buraco (buraco visível sob o veículo). ' +
-      'Incêndio visível na dianteira direita do veículo, sobre a superfície do capô e roda. ' +
-      'O veículo manteve orientação horizontal (não rotacionou).');
+      'Fase 1: V1 se deslocando da esquerda para a direita com seta vermelha apontando para a direita. ' +
+      'Fase 2: roda dianteira direita de V1 está dentro do buraco — o buraco aparece SOB a roda dianteira direita, com sobreposição visual. Seta vermelha indica onde ocorreu o impacto. ' +
+      'Fase 3: V1 imobilizado. O buraco está visível SOB a roda dianteira direita do veículo (parcialmente oculto pelo veículo). ' +
+      'INCÊNDIO OBRIGATÓRIO na Fase 3: chamas laranja-vermelhas GRANDES e visíveis cobrindo o setor do capô dianteiro direito do veículo, vistas de cima. ' +
+      'O incêndio deve ser proeminente e inconfundível, não apenas uma pequena mancha.');
     setVal('observacoes',
-      'O buraco deve aparecer SOB o veículo na Fase 3 (a roda está dentro dele). ' +
-      'Na Fase 2 o buraco também já deve estar sob a roda, não separado. ' +
-      'Não houve rotação. Incêndio confirmado, originado na dianteira direita.');
+      'OBRIGATÓRIO Fase 3: mostrar chamas grandes e visíveis (laranja e vermelho) no capô dianteiro direito do veículo. ' +
+      'O buraco deve estar sob a roda dianteira direita nas Fases 2 e 3. ' +
+      'Seta vermelha obrigatória na Fase 1 indicando sentido de deslocamento (esquerda → direita). ' +
+      'Não houve rotação do veículo.');
 
     atualizar();
 
@@ -1042,12 +1044,13 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
       'Saída de sítio visível na margem superior da via, próxima à posição inicial de V1. ' +
       'Ponto de contato: extremidade esquerda de V1 (traseira) x extremidade direita de V2 (dianteira).');
     setVal('observacoes',
-      'POSIÇÕES NA CENA (obrigatório): V2 (vermelho) está À ESQUERDA. V1 (prata) está À DIREITA. ' +
-      'MOVIMENTO: V1 faz ré para a ESQUERDA — a seta de movimento de V1 aponta para a ESQUERDA. ' +
-      'A dianteira (capô) de V1 aponta para a DIREITA. ' +
-      'CAÇAMBA: V2 DEVE ter caçamba com tábuas de madeira marrom visível em TODOS os três painéis, sem exceção. ' +
-      'COLISÃO: na Fase 2, mostrar marca de impacto/estrela no ponto de contato entre traseira de V1 e dianteira de V2. ' +
-      'V2 permaneceu imóvel em todos os painéis.');
+      'REGRAS ABSOLUTAS — não podem ser violadas: ' +
+      '1. V2 (vermelho com caçamba de madeira) está SEMPRE À ESQUERDA em todos os painéis. V1 (prata) está SEMPRE À DIREITA. NUNCA inverter os rótulos. ' +
+      '2. SOMENTE V1 se move: V1 faz ré para a ESQUERDA. A seta vermelha de V1 aponta para a ESQUERDA. A dianteira (capô) de V1 aponta para a DIREITA. ' +
+      '3. V2 está completamente parado em todos os painéis. Sem seta em V2, ou seta com indicador de parado. ' +
+      '4. CAÇAMBA: V2 DEVE ter caçamba com tábuas de madeira marrom visível em TODOS os três painéis sem exceção — é uma característica permanente do veículo. ' +
+      '5. Fase 2: mostrar marca de impacto/estrela no ponto de contato entre traseira de V1 (extremidade esquerda) e dianteira de V2 (extremidade direita). Seta vermelha em V1 apontando para a esquerda. ' +
+      '6. Fase 3: mostrar deformação visível na traseira de V1 E na dianteira de V2 no ponto de contato. Manter rótulos corretos (V1 à direita, V2 à esquerda).');
 
     // Mostra tab V1 como ativa e V2 visível
     trocarTab(0);
