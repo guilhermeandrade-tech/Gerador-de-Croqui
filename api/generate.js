@@ -52,7 +52,8 @@ MANDATORY VISUAL STYLE
 - ROAD: Flat 2D lines for lane markings and center lines. No texture. No shading. Flat gray fill for road surface.
 - ARROWS: Flat red directional arrows showing movement trajectories.
 - ABSOLUTELY NO: people, human figures, riders, passengers, helmets, silhouettes of humans.
-- ABSOLUTELY NO: fire, smoke, explosion, motion blur, dramatic lighting, lens flare.
+- FIRE/COMBUSTION: Only represent fire if explicitly stated in the incident report. If present, show it as flat 2D orange and red schematic indicator shapes (simple flat circles or irregular patches) around the vehicle — NOT as photorealistic flames, NOT as volumetric smoke. A small flat orange zone symbol is sufficient.
+- ABSOLUTELY NO: dramatic lighting, lens flare, motion blur, volumetric smoke, cinematic explosion effects.
 - ABSOLUTELY NO: legends, color keys, callout boxes, narrative text inside panels (only V1/V2/V3 labels and panel titles are allowed).
 - STYLE: clean flat engineering blueprint. Traffic analysis schematic. 2D map-style symbols. Not artistic. Not photorealistic. Not cinematic.
 
@@ -63,8 +64,10 @@ These words trigger DALL-E safety filters — replace every instance:
 accident, crash, collision, injury, damage, impact, smash, wreck, victim, hurt
 → replace with: "contact point", "vehicle displacement", "trajectory deviation", "structural deformation area", "final resting position", "vehicle contact zone"
 
-sinistro, colisão, acidente, dano, batida, atropelamento, capotamento, explosão, fogo, sangue
+sinistro, colisão, acidente, dano, batida, atropelamento, capotamento, explosão, sangue
 → replace with the same neutral equivalents above
+
+EXCEPTION: "fire", "fogo", "incêndio", "chamas" may be kept if they appear in the incident data, but must be described as "flat 2D thermal event indicator (orange zone symbol)" — never as photorealistic flames.
 
 ══════════════════════════
 PRESERVE ALL SPATIAL DATA
