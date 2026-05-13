@@ -417,8 +417,11 @@
   <!-- ── COLUNA ESQUERDA: FORMULÁRIO ── -->
   <div class="col-form">
 
-    <!-- BOTÃO DE TESTE -->
-    <button class="btn-test" onclick="preencherTeste()">🧪 Preencher com caso de teste — Incêndio após buraco na via</button>
+    <!-- BOTÕES DE TESTE -->
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn-test" style="flex:1" onclick="preencherTeste()">🧪 Caso 1 — Incêndio após buraco na via</button>
+      <button class="btn-test" style="flex:1" onclick="preencherTesteColisao()">🧪 Caso 2 — Colisão em ré (2 veículos)</button>
+    </div>
 
     <!-- VIA -->
     <div class="card">
@@ -975,6 +978,63 @@ ${veiculosHTML}${dinamicaHTML ? '\n\n' + dinamicaHTML : ''}`;
     atualizar();
 
     // Scroll suave até o topo do formulário
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── CASO 2: COLISÃO EM RÉ ──
+  function preencherTesteColisao() {
+    if (modoManual) resetarPrompt();
+
+    // Garante que V2 está visível
+    document.getElementById('painel-v2').style.display = '';
+    document.getElementById('painel-v2').classList.add('active');
+    // Ativa tab V2
+    const tabs = document.querySelectorAll('.veiculo-tab');
+    if (tabs[1]) tabs[1].classList.add('active');
+
+    // Via
+    setSelectByText('tipo-via',   'Via urbana asfaltada');
+    setSelectByText('config-via', 'Mão única');
+    setVal('sentido-via',  'Da esquerda para a direita. Via com uma faixa. Acesso lateral (saída de sítio) no lado superior da via.');
+    setVal('qtd-faixas',   '1');
+
+    // V1 — Caminhonete prata (fazendo ré)
+    setSelectByText('v1-modelo', 'Caminhonete');
+    setVal('v1-cor',     'Prata');
+    setVal('v1-sentido', 'Fazendo ré da direita para a esquerda (sentido contrário ao fluxo)');
+    setVal('v1-faixa',   'Faixa única, lado direito da cena');
+    setVal('v1-danos',   'Traseira esquerda');
+
+    // V2 — Caminhonete vermelha (estacionada, parada)
+    setSelectByText('v2-modelo', 'Caminhonete');
+    setVal('v2-cor',     'Vermelho');
+    setVal('v2-sentido', 'Parado (estacionado para entrega), orientado da esquerda para a direita na faixa');
+    setVal('v2-faixa',   'Faixa única, lado esquerdo da cena, à frente do ponto de ré de V1');
+    setVal('v2-danos',   'Dianteira');
+
+    // Dinâmica
+    setVal('relato',
+      'V1 (caminhonete prata) estava parado próximo a uma saída lateral (saída de sítio) e iniciou manobra de ré ' +
+      'em linha reta pela faixa única. V2 (caminhonete vermelha com carroceria de madeira) estava parado na mesma ' +
+      'faixa à esquerda de V1, estacionado para entrega. V1 percorreu em ré sem desviar e a traseira esquerda de V1 ' +
+      'colidiu com a dianteira de V2. V2 permaneceu parado durante todo o evento.');
+    setVal('evento-inicial',  'V1 iniciou manobra de ré em linha reta na faixa única');
+    setSelectByText('lado-desvio', 'Não houve desvio');
+    setVal('movimento-apos',  'V1 continuou em ré em linha reta até encostar na dianteira de V2. V2 permaneceu imóvel.');
+    setVal('elemento-atingido', 'Dianteira de V2');
+    setVal('posicao-final',   'Traseira esquerda de V1 em contato com a dianteira de V2, ambos na faixa única');
+    setVal('detalhe-posicao',
+      'V1 com traseira encostada na dianteira de V2. V1 orientado com dianteira para a direita e traseira para a esquerda ' +
+      '(posição de ré). V2 orientado com dianteira para a direita, parado. ' +
+      'Ponto de contato: traseira esquerda de V1 x dianteira de V2. ' +
+      'Saída lateral (saída de sítio) visível na margem superior da via, entre as posições iniciais dos dois veículos.');
+    setVal('observacoes',
+      'V2 estava completamente parado antes e durante o evento. Não houve desvio lateral de nenhum veículo. ' +
+      'Sentido do fluxo da via: esquerda para direita. V1 se deslocou no sentido contrário ao fluxo (ré).');
+
+    // Mostra tab V1 como ativa e V2 visível
+    trocarTab(0);
+    atualizar();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
