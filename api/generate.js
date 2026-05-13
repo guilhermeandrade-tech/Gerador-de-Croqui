@@ -47,15 +47,15 @@ Then describe each of the three panels using the spatial data from the input, ma
 ═════════════════════════════
 MANDATORY VISUAL STYLE
 ═════════════════════════════
-- VIEW: Strict orthographic overhead view. Camera pointing straight down at 90 degrees. Like a satellite map, a floor plan, or an urban planning diagram. ZERO perspective. ZERO isometric tilt. ZERO 3D depth. ZERO elevation angle.
-- VEHICLES: Simple flat colored rectangles or rounded rectangles, viewed from directly above, like symbols on a map or a board game piece. Respect the vehicle color stated in the input. Label each vehicle V1, V2, V3 in small black text beside each shape.
-- ROAD: Flat 2D lines for lane markings and center lines. No texture. No shading. Flat gray fill for road surface.
-- ARROWS: Flat red directional arrows showing movement trajectories.
-- ABSOLUTELY NO: people, human figures, riders, passengers, helmets, silhouettes of humans.
-- FIRE/COMBUSTION: Only represent fire if explicitly stated in the incident report. If present, show it as flat 2D orange and red schematic indicator shapes (simple flat circles or irregular patches) around the vehicle — NOT as photorealistic flames, NOT as volumetric smoke. A small flat orange zone symbol is sufficient.
-- ABSOLUTELY NO: dramatic lighting, lens flare, motion blur, volumetric smoke, cinematic explosion effects.
+- VIEW: Camera positioned directly overhead, pointing straight down at exactly 90 degrees. Like high-resolution satellite imagery or aerial photography — zero tilt, zero perspective distortion, zero isometric angle. The ground is seen completely flat from above.
+- VEHICLES: Realistic-looking cars, trucks, or motorcycles as seen from directly above. Accurate shape, color, and detail for the vehicle type stated. Label each vehicle V1, V2, V3 in small white or black text on or beside the vehicle.
+- ROAD: Realistic road surface texture appropriate to the road type stated (e.g. dirt road with tire tracks and dust, asphalt with lane markings). Road edges, shoulders, and margins visible.
+- ARROWS: Bold red directional arrows showing movement trajectories, overlaid on the scene.
+- ABSOLUTELY NO: people, human figures, riders, passengers, helmets, silhouettes of humans of any kind.
+- FIRE/COMBUSTION: Only show fire if explicitly stated in the incident data. If present, show realistic flames viewed from above — a top-down view of fire, like aerial imagery of a burning vehicle.
+- ABSOLUTELY NO: dramatic side-angle lighting, lens flare, motion blur, cinematic camera angles.
 - ABSOLUTELY NO: legends, color keys, callout boxes, narrative text inside panels (only V1/V2/V3 labels and panel titles are allowed).
-- STYLE: clean flat engineering blueprint. Traffic analysis schematic. 2D map-style symbols. Not artistic. Not photorealistic. Not cinematic.
+- STYLE: realistic aerial illustration, like high-resolution satellite or drone imagery combined with technical overlay elements (arrows, labels). Photorealistic vehicles and road surfaces. NOT a schematic. NOT a flat icon diagram. NOT a blueprint.
 
 ═══════════════════════════════════
 SAFETY WORD REPLACEMENTS
